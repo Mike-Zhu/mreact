@@ -7,6 +7,7 @@ class Component{
         this.currentElement = null
         this._renderedComponent = null
         this._renderedNode = null
+        console.log(this)
     }
 
     _construct(element){
@@ -15,6 +16,7 @@ class Component{
 
     mountComponent(){
         const renderedElement = this.render()
+        console.log('mount',renderedElement)
         const renderedComponent = instantiateComponent(renderedElement)
         this._renderedComponent = renderedComponent
 

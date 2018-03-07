@@ -14,7 +14,16 @@ function appendChildren(node, children) {
     }
 }
 
+function removeProperty(node, property) {
+    node.removeAttributeNode(property)
+}
+
+function setProperty(node,property,value){
+    node.setAttribute(property,value)
+}
 module.exports = {
     empty,
-    appendChildren
+    appendChildren,
+    removeProperty,
+    setProperty
 }

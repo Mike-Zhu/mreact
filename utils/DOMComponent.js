@@ -7,8 +7,34 @@ class DOMComponent extends MultiChild {
         this._currentElement = element
         this._domNode = null
     }
-    _updateNodeProperties() {
-
+    _updateNodeProperties(oldProps, nextPros) {
+        let styleUpdates = {}
+        Object.keys(oldProps).forEach(propsName => {
+            if (propsName === 'style') {
+                Object.keys(oldProps[propsName]).forEach(styleName => {
+                    styleUpdates[styleName] = ''
+                })
+            } else if (propsName === 'children') {
+                //
+            } else {
+                Dom.removeProperty(this._domNode, propsName)
+            }
+        })
+        Object.keys(nextPros).forEach(propsName => {
+            if (propsName === 'style') {
+                Object.keys(nextPros[propsName]).forEach(styleName => {
+                    //需要处理style样式
+                    styleUpdates[styleName] = nextPros[propsName][styleName]
+                })
+            } else if (propsName === 'children') {
+                //
+            } else {
+                Dom.setProperty(this._domNode, propsName, nextPros[propsName])
+            }
+        })
+        if(Object.keys(styleUpdates).length > 0){
+            updateStyles(this._domNode, styleUpdates)
+        }
     }
     _createInitialDOMChildren(props) {
         if (
@@ -35,3 +61,10 @@ class DOMComponent extends MultiChild {
 }
 
 module.exports = DOMComponent
+
+function updateStyles(node, style) {
+    Object.keys(style).forEach(styleName => {
+        node.style[styleName] = style[styleName]
+        console.log(node.style , style[styleName])
+    })
+}

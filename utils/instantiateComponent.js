@@ -2,7 +2,6 @@ const DOMComponent = require('./DOMComponent')
 
 function instantiateComponent(element) {
     let componentInstance
-
     if (typeof element.type === 'function') {
         componentInstance = new element.type(element.props)
         //componentInstance._construct(element)
@@ -14,6 +13,7 @@ function instantiateComponent(element) {
             children: { children: element }
         })
     }
+    console.log('instant',element.type)
     return componentInstance
 }
 
