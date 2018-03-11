@@ -7,7 +7,7 @@ class DOMComponent extends MultiChild {
         this._currentElement = element
         this._domNode = null
     }
-    _updateNodeProperties(oldProps, nextPros) {
+    _updateNodeProperties(oldProps, nextProps) {
         let styleUpdates = {}
         Object.keys(oldProps).forEach(propsName => {
             if (propsName === 'style') {
@@ -20,19 +20,19 @@ class DOMComponent extends MultiChild {
                 Dom.removeProperty(this._domNode, propsName)
             }
         })
-        Object.keys(nextPros).forEach(propsName => {
+        Object.keys(nextProps).forEach(propsName => {
             if (propsName === 'style') {
-                Object.keys(nextPros[propsName]).forEach(styleName => {
+                Object.keys(nextProps[propsName]).forEach(styleName => {
                     //需要处理style样式
-                    styleUpdates[styleName] = nextPros[propsName][styleName]
+                    styleUpdates[styleName] = nextProps[propsName][styleName]
                 })
             } else if (propsName === 'children') {
                 //
             } else {
-                Dom.setProperty(this._domNode, propsName, nextPros[propsName])
+                Dom.setProperty(this._domNode, propsName, nextProps[propsName])
             }
         })
-        if(Object.keys(styleUpdates).length > 0){
+        if (Object.keys(styleUpdates).length > 0) {
             updateStyles(this._domNode, styleUpdates)
         }
     }
@@ -48,6 +48,21 @@ class DOMComponent extends MultiChild {
             Dom.appendChildren(this._domNode, childrenNodes)
         }
     }
+    _updateDOMChildren(prevProps, nextProps) {
+        const prevType = typeof prevProps.children
+        const nextType = typeof nextProps.children
+
+        if (nextType === 'undefined') return;
+
+        if (nextType === 'string' && nextProps === 'number') {
+            this._domNode.textContent = nextProps.children
+        } else {
+            this.updateChildren(nextProps.children)
+        }
+    }
+    updateChildren(nextchildRen) {
+
+    }
     mountComponent() {
         // create real dom nodes
         const node = document.createElement(this._currentElement.type)
@@ -58,6 +73,11 @@ class DOMComponent extends MultiChild {
 
         return node
     }
+    updateComponent(prevElement, nextElement) {
+        this._currentElement = nextElement
+        this._updateNodeProperties(prevElement.props, nextElement.props)
+        this._updateDOMChildren(prevElement.props, nextElement.props)
+    }
 }
 
 module.exports = DOMComponent
@@ -65,6 +85,6 @@ module.exports = DOMComponent
 function updateStyles(node, style) {
     Object.keys(style).forEach(styleName => {
         node.style[styleName] = style[styleName]
-        console.log(node.style , style[styleName])
+        console.log(node.style, style[styleName])
     })
 }
