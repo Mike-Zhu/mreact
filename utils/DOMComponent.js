@@ -7,6 +7,9 @@ class DOMComponent extends MultiChild {
         this._currentElement = element
         this._domNode = null
     }
+    unmountComponent(){
+        this.unmountChildren()
+    }
     _updateNodeProperties(oldProps, nextProps) {
         let styleUpdates = {}
         Object.keys(oldProps).forEach(propsName => {
@@ -60,9 +63,7 @@ class DOMComponent extends MultiChild {
             this.updateChildren(nextProps.children)
         }
     }
-    updateChildren(nextchildRen) {
 
-    }
     mountComponent() {
         // create real dom nodes
         const node = document.createElement(this._currentElement.type)
