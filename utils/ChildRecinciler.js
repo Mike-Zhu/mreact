@@ -7,6 +7,8 @@ function instantiateChild(childInstances, child, name) {
 
   if (!childInstances[name]) {
     childInstances[name] = initiateComponent(child)
+    console.log(name)
+    console.log(childInstances)
   }
 }
 
