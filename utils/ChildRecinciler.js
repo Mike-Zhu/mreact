@@ -1,21 +1,11 @@
 const traverseAllChildren = require('./traverseAllChildren')
 
-function instantiateChild(childInstances, child, name) {
-  // don't know wtf happened here, cannot resolve it at top level
-  // hack it in
-  const initiateComponent = require('./instantiateComponent')
 
-  if (!childInstances[name]) {
-    childInstances[name] = initiateComponent(child)
-    console.log(name)
-    console.log(childInstances)
-  }
-}
 
 function instantiateChildren(children) {
   let childInstances = {}
 
-  traverseAllChildren(children, instantiateChild, childInstances)
+  traverseAllChildren(children, childInstances)
 
   return childInstances
 }

@@ -1,6 +1,16 @@
 const SEPARATOR = '.'
 const SUBSEPARATOR = ':'
 
+function instantiateChild(childInstances, child, name) {
+  // don't know wtf happened here, cannot resolve it at top level
+  // hack it in
+  const initiateComponent = require('./instantiateComponent')
+
+  if (!childInstances[name]) {
+    childInstances[name] = initiateComponent(child)
+  }
+}
+
 function getComponentKey(component, index) {
   // This is where we would use the key prop to generate a unique id that
   // persists across moves. However we're skipping that so we'll just use the
@@ -8,23 +18,19 @@ function getComponentKey(component, index) {
   return index.toString(36)
 }
 
-function traverseAllChildren(children, callback, traverseContext) {
-  return traverseAllChildrenImpl(children, '', callback, traverseContext)
+function traverseAllChildren(children, traverseContext/*要返回的node本身*/) {
+  return traverseAllChildrenImpl(children, '', instantiateChild, traverseContext)
 }
 
 function traverseAllChildrenImpl(
   children,
   nameSoFar,
-  callback,
+  instantiateChild,
   traverseContext
 ) {
   // single child
-  if (
-    typeof children === 'string' ||
-    typeof children === 'number' ||
-    !Array.isArray(children)
-  ) {
-    callback(
+  if (!Array.isArray(children)) {
+    instantiateChild(
       traverseContext,
       children,
       nameSoFar + SEPARATOR + getComponentKey(children, 0)
@@ -39,7 +45,7 @@ function traverseAllChildrenImpl(
     subtreeCount += traverseAllChildrenImpl(
       child,
       namePrefix + getComponentKey(child, i),
-      callback,
+      instantiateChild,
       traverseContext
     )
   })
