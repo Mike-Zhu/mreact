@@ -21,7 +21,6 @@ function traverseAllChildrenImpl(
   callback,
   traverseContext
 ) {
-  console.log(children)
   // single child
   if (
     typeof children === 'string' ||

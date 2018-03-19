@@ -67,7 +67,6 @@ class MultiChild {
     const childrenNodes = Object.keys(childrenComponents).map((childKey) => {
       const childComponent = childrenComponents[childKey]
 
-      console.log(childComponent)
       return Reconciler.mountComponent(childComponent)
     })
 

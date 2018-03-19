@@ -10,7 +10,7 @@ function instantiateComponent(element) {
     } else if (typeof element === 'string' || 'number') {
         componentInstance = new DOMComponent({
             type: 'span',
-            children: { children: element }
+            props: { children: element }
         })
     }
     return componentInstance

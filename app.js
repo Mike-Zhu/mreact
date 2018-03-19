@@ -4,13 +4,13 @@ class App extends Dilithium.Component {
   constructor(props) {
     super(props)
     this.state = {
-      first: "2"
+      first: 1
     }
-    // setTimeout(() => {
-    //   this.setState({
-    //     first: 2
-    //   })
-    // }, 1000 * 3)
+    setTimeout(() => {
+      this.setState({
+        first: 2
+      })
+    }, 1000 * 3)
   }
 
   render() {

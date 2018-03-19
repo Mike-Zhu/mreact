@@ -25,6 +25,7 @@ class Component {
     }
 
     setState(partialState) {
+        debugger;
         this._pendingState = Object.assign({}, this.state, partialState)
         this.updateComponent(this._currentElement, this._currentElement)
     }

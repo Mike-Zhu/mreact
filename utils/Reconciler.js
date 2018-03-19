@@ -1,7 +1,6 @@
 // Reconciller
 
 function mountComponent(component) {
-    console.log(component)
     return component.mountComponent()
 }
 
