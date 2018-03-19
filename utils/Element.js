@@ -6,7 +6,6 @@ function createElement(type, config, children) {
     } else if (childrenLength === 1) {
         props.children = children
     }
-    console.log(type)
     return {
         type,
         props

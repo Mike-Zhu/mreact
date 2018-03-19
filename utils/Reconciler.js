@@ -1,7 +1,7 @@
 // Reconciller
 
 function mountComponent(component) {
-    console.log('多泰 mount', component)
+    console.log(component)
     return component.mountComponent()
 }
 

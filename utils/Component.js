@@ -7,19 +7,18 @@ class Component {
         this.currentElement = null
         this._renderedComponent = null
         this._renderedNode = null
-        console.log(this)
     }
 
     _construct(element) {
-        this.currentElement = element
+        this._currentElement = element
     }
 
     mountComponent() {
         const renderedElement = this.render()
-        console.log('mount', renderedElement)
         const renderedComponent = instantiateComponent(renderedElement)
         this._renderedComponent = renderedComponent
 
+        console.log(renderedComponent)
         const _renderedNode = Reconciler.mountComponent(renderedComponent)
         this._renderedNode = _renderedNode
         return _renderedNode
@@ -31,6 +30,7 @@ class Component {
     }
 
     updateComponent(preElement, nextElement) {
+        // debugger;
         if (preElement !== nextElement) {
             //表示是props变化，重组了Element
         }

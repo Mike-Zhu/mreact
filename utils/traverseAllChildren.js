@@ -11,6 +11,7 @@ function getComponentKey(component, index) {
 }
 
 function traverseAllChildren(children, callback, traverseContext/*要返回的node本身*/) {
+  console.log(children)
   return traverseAllChildrenImpl(children, '', callback, traverseContext)
 }
 
@@ -20,8 +21,12 @@ function traverseAllChildrenImpl(
   callback,
   traverseContext
 ) {
+  console.log(children)
   // single child
-  if (!Array.isArray(children)) {
+  if (
+    typeof children === 'string' ||
+    typeof children === 'number' ||
+    !Array.isArray(children)) {
     callback(
       traverseContext,
       children,

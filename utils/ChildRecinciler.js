@@ -17,8 +17,16 @@ function instantiateChildren(children) {
 
   traverseAllChildren(children, instantiateChild, childInstances)
 
-  console.log(childInstances)
   return childInstances
+}
+
+
+function unmountChildren(renderedChildren) {
+  if (!renderedChildren) return
+
+  Object.keys(renderedChildren).forEach(childKey => {
+    Reconciler.unmountComponent(renderedChildren[childKey])
+  })
 }
 
 function updateChildren(
@@ -49,18 +57,19 @@ function updateChildren(
       //新增
       const nextComponent = instantiateChild(nextElement)
       nextChildren[childKey] = nextComponent
+      console.log(nextComponent)
       mountNodes.push(Reconciler.mountComponent(nextComponent))
     }
   })
 
   Object.keys(prevChildren).forEach(childKey => {
-    if(!nextChildren.hasOwnProperty(childKey)){
+    if (!nextChildren.hasOwnProperty(childKey)) {
       const prevChildComponent = prevChildren[childKey]
-      removedNodes = prevChildComponent
+      removedNodes[childKey] = prevChildComponent
       Reconciler.unmountComponent(prevChildComponent)
     }
   })
-  
+
 }
 
 function shouldUpdateComponent(prevElement, nextElement) {
@@ -68,5 +77,6 @@ function shouldUpdateComponent(prevElement, nextElement) {
 }
 module.exports = {
   instantiateChildren,
-  updateChildren
+  updateChildren,
+  unmountChildren
 }

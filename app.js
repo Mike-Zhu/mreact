@@ -1,15 +1,28 @@
 const Dilithium = require('./utils/mini-react')
 
 class App extends Dilithium.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      first: "2"
+    }
+    // setTimeout(() => {
+    //   this.setState({
+    //     first: 2
+    //   })
+    // }, 1000 * 3)
+  }
+
   render() {
     return (
       <div>
+        {this.state.first}
         <span>
           <h1 style={{ color: 'red' }} >Heading 1</h1>
           <SmallHeader />
           <h2 style={{ color: 'yellow' }} >Heading 2</h2>
           <div>
-            <h1>1</h1>
+            <h1>{this.state.first}</h1>
             <h2>2</h2>
             <h3>3</h3>
           </div>
