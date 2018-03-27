@@ -39,9 +39,13 @@ class SmallHeader extends Component {
     this.state = {
       aaa: 22
     }
+    setTimeout(() => {
+      this.setState({
+        aaa: 333
+      })
+    }, 3000)
   }
   render() {
-    console.log(this.state)
     return (
       <h5>{this.state.aaa}</h5>
     )

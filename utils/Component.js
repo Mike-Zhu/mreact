@@ -39,7 +39,7 @@ class Component {
         this._currentElement = nextElement
 
         this.props = nextElement.props
-        this.state = this._pendingState
+        this.state = this._pendingState || this.state
         this._pendingState = null
 
         const prevRenderedElement = this._renderedComponent._currentElement
