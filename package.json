@@ -1,5 +1,5 @@
 {
-  "name": "dilithium-demo",
+  "name": "Mreact-demo",
   "version": "v0.0.1",
   "scripts": {
     "build": "webpack --progress",
@@ -17,7 +17,7 @@
       [
         "transform-react-jsx",
         {
-          "pragma": "Dilithium.createElement"
+          "pragma": "Mreact.createElement"
         }
       ],
       "transform-class-properties"

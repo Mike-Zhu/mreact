@@ -1,6 +1,6 @@
-const Dilithium = require('./utils/mini-react')
-
-class App extends Dilithium.Component {
+const Mreact = require('./utils/mini-react')
+const { Component } = Mreact
+class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -33,7 +33,7 @@ class App extends Dilithium.Component {
   }
 }
 
-class SmallHeader extends Dilithium.Component {
+class SmallHeader extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -48,4 +48,4 @@ class SmallHeader extends Dilithium.Component {
   }
 }
 
-Dilithium.render(<App />, document.getElementById('root'))
+Mreact.render(<App />, document.getElementById('root'))

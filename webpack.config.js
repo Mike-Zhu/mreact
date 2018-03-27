@@ -14,7 +14,7 @@ module.exports = {
         loader: 'babel',
         query: {
           plugins: [
-            ['transform-react-jsx', {pragma: 'Dilithium.createElement'}],
+            ['transform-react-jsx', {pragma: 'Mreact.createElement'}],
             'transform-class-properties'
           ]
         }
