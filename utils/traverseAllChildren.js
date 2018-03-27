@@ -1,8 +1,6 @@
 const SEPARATOR = '.'
 const SUBSEPARATOR = ':'
 
-
-
 function getComponentKey(component, index) {
   // This is where we would use the key prop to generate a unique id that
   // persists across moves. However we're skipping that so we'll just use the
@@ -10,8 +8,7 @@ function getComponentKey(component, index) {
   return index.toString(36)
 }
 
-function traverseAllChildren(children, callback, traverseContext/*要返回的node本身*/) {
-  console.log(children)
+function traverseAllChildren(children, callback, traverseContext) {
   return traverseAllChildrenImpl(children, '', callback, traverseContext)
 }
 
@@ -25,7 +22,8 @@ function traverseAllChildrenImpl(
   if (
     typeof children === 'string' ||
     typeof children === 'number' ||
-    !Array.isArray(children)) {
+    !Array.isArray(children)
+  ) {
     callback(
       traverseContext,
       children,

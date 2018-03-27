@@ -57,7 +57,7 @@ class DOMComponent extends MultiChild {
 
         if (nextType === 'undefined') return;
 
-        if (nextType === 'string' && nextProps === 'number') {
+        if (nextType === 'string' || nextType === 'number') {
             this._domNode.textContent = nextProps.children
         } else {
             this.updateChildren(nextProps.children)
@@ -86,6 +86,5 @@ module.exports = DOMComponent
 function updateStyles(node, style) {
     Object.keys(style).forEach(styleName => {
         node.style[styleName] = style[styleName]
-        console.log(node.style, style[styleName])
     })
 }

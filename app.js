@@ -10,7 +10,7 @@ class App extends Dilithium.Component {
       this.setState({
         first: 2
       })
-    }, 1000 * 3)
+    }, 1000)
   }
 
   render() {
@@ -34,9 +34,16 @@ class App extends Dilithium.Component {
 }
 
 class SmallHeader extends Dilithium.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      aaa: 22
+    }
+  }
   render() {
+    console.log(this.state)
     return (
-      <h5>SmallHeader</h5>
+      <h5>{this.state.aaa}</h5>
     )
   }
 }

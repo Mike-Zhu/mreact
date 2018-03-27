@@ -35,6 +35,10 @@ function updateChildren(
   mountNodes,
   removedNodes
 ) {
+
+  // hack in the import function
+  const instantiateComponent = require('./instantiateComponent')
+
   Object.keys(nextChildren).forEach(childKey => {
     const prevChildComponent = prevChildren[childKey]
     //此处对比的是element,没法对比component
@@ -49,15 +53,15 @@ function updateChildren(
       Reconciler.receiveComponent(prevChildComponent, nextElement)
       nextChildren[childKey] = prevChildComponent
     } else {
-      if (prevElement) {
+      if (prevChildComponent) {
         //存在原始元素，但是type变了，存储removenode，销毁原来的元素
         removedNodes[childKey] = prevChildComponent._domNode
         Reconciler.unmountComponent(prevChildComponent)
       }
       //新增
-      const nextComponent = instantiateChild(nextElement)
+      const nextComponent = instantiateComponent(nextElement)
       nextChildren[childKey] = nextComponent
-      console.log(nextComponent)
+      // console.log(nextComponent)
       mountNodes.push(Reconciler.mountComponent(nextComponent))
     }
   })

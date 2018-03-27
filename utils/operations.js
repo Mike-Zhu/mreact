@@ -19,11 +19,10 @@ const OPERATIONS = {
             afterNode: afterNode
         }
     },
-    remove(component, afterNode) {
+    remove(node) {
         return {
             type: UPDATE_TYPES.REMOVE,
-            fromIndex: component._mountIndex,
-            afterNode: afterNode
+            fromNode: node
         }
     }
 }

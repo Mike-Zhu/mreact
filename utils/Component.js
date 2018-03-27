@@ -18,14 +18,13 @@ class Component {
         const renderedComponent = instantiateComponent(renderedElement)
         this._renderedComponent = renderedComponent
 
-        console.log(renderedComponent)
         const _renderedNode = Reconciler.mountComponent(renderedComponent)
         this._renderedNode = _renderedNode
         return _renderedNode
     }
 
     setState(partialState) {
-        debugger;
+        // debugger;
         this._pendingState = Object.assign({}, this.state, partialState)
         this.updateComponent(this._currentElement, this._currentElement)
     }
@@ -47,7 +46,7 @@ class Component {
         const nextRenderedElement = this.render()
 
         if (shouldUpdateComponent(prevRenderedElement, nextRenderedElement)) {
-            Reconciler.receiveComponent(this._renderedComponent, nextElement)
+            Reconciler.receiveComponent(this._renderedComponent, nextRenderedElement)
         } else {
             Reconciler.unmountComponent(this._renderedComponent)
             const nextRenderedComponent = instantiateComponent(nextRenderedElement)

@@ -1,7 +1,7 @@
 const ChildReconciler = require('./ChildRecinciler')
 const Reconciler = require('./Reconciler')
 const traverseAllChildren = require('./traverseAllChildren')
-const OPERATIONS = require('./operations')
+const { OPERATIONS, UPDATE_TYPES } = require('./operations')
 const DOM = require('./DOM')
 const assert = require('./assert')
 
@@ -55,6 +55,8 @@ class MultiChild {
   mountChildren(children) {
     // children elements => children nodes
     const childrenComponents = ChildReconciler.instantiateChildren(children)
+    // console.log(children)
+    // debugger
     this._renderedChildren = childrenComponents
 
     /*
@@ -80,6 +82,7 @@ class MultiChild {
     let mountNodes = []
     let removedNodes = {}
 
+    // debugger
     ChildReconciler.updateChildren(
       prevRenderedChildren,
       nextRenderedChildren,
@@ -130,7 +133,6 @@ class MultiChild {
         OPERATIONS.remove(removedNodes[childKey])
       )
     })
-
 
     // do the actual updates
     processQueue(this._domNode, updates)
