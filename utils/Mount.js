@@ -10,7 +10,7 @@ function mount(element, node) {
     const renderedNode = Reconciler.mountComponent(component)
 
     DOM.empty(node)
-    DOM.appendChildren(node, renderedNode)
+    DOM.appendChildren(node, renderedNode.render())
 }
 
 function render(element, node) {

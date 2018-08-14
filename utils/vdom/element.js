@@ -1,6 +1,6 @@
-const  _  = require('./util') 
+const _ = require('./util')
 
-module.exports  =   function Element(tagName, props, children) {
+function Element(tagName, props, children) {
     if (!(this instanceof Element)) {
         return new Element(tagName, props, children)
     }
@@ -33,7 +33,7 @@ Element.prototype.render = function () {
     var $el = document.createElement(this.tagName)
     var props = this.props
     var children = this.children
-
+    delete props.children
     for (var propsName in props) {
         var propsValue = props[propsName]
         $el.setAttribute(propsName, propsValue)
@@ -46,3 +46,5 @@ Element.prototype.render = function () {
     });
     return $el
 }
+
+module.exports = Element

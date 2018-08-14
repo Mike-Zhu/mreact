@@ -1,6 +1,8 @@
 const MultiChild = require('./MultiChild')
 const Dom = require('./DOM')
 const el = require('./vdom/element')
+const instantiateComponent = require('./instantiateComponent')
+const Reconciler = require('./Reconciler')
 
 class DOMComponent extends MultiChild {
     constructor(element) {
@@ -68,26 +70,25 @@ class DOMComponent extends MultiChild {
     mountComponent() {
         const vdomTree = el
         // create real dom nodes
-        const node = document.createElement(this._currentElement.type)
-        console.log(this.getVdomTree(this._currentElement))
+        const node = this.getVdomTree(this._currentElement)
         this._domNode = node
-
+        return node
         // this._updateNodeProperties({}, this._currentElement.props)
         // this._createInitialDOMChildren(this._currentElement.props)
-
-        return node
     }
     getVdomTree(rootElement) {
-        if (typeof rootElement === 'string' || typeof rootElement === 'number') {
+        if (typeof rootElement.type === 'function') {
+            const node = Reconciler.mountComponent(new rootElement.type(rootElement.props))
+            console.log(node)
+            return node
+        } else if (typeof rootElement === 'string' || typeof rootElement === 'number') {
             return rootElement
         }
-        console.log(rootElement)
         const { type, props = {} } = rootElement
         let children = props.children
         if (typeof children === 'string' || typeof children === 'number') {
             children = [children]
         }
-        console.log(children)
         return el(type, props, children.map(res => this.getVdomTree(res)))
     }
     updateComponent(prevElement, nextElement) {
