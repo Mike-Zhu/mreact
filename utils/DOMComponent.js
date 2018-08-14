@@ -1,5 +1,6 @@
 const MultiChild = require('./MultiChild')
 const Dom = require('./DOM')
+const el = require('./vdom/element')
 
 class DOMComponent extends MultiChild {
     constructor(element) {
@@ -7,7 +8,7 @@ class DOMComponent extends MultiChild {
         this._currentElement = element
         this._domNode = null
     }
-    unmountComponent(){
+    unmountComponent() {
         this.unmountChildren()
     }
     _updateNodeProperties(oldProps, nextProps) {
@@ -65,14 +66,29 @@ class DOMComponent extends MultiChild {
     }
 
     mountComponent() {
+        const vdomTree = el
         // create real dom nodes
         const node = document.createElement(this._currentElement.type)
+        console.log(this.getVdomTree(this._currentElement))
         this._domNode = node
 
-        this._updateNodeProperties({}, this._currentElement.props)
-        this._createInitialDOMChildren(this._currentElement.props)
+        // this._updateNodeProperties({}, this._currentElement.props)
+        // this._createInitialDOMChildren(this._currentElement.props)
 
         return node
+    }
+    getVdomTree(rootElement) {
+        if (typeof rootElement === 'string' || typeof rootElement === 'number') {
+            return rootElement
+        }
+        console.log(rootElement)
+        const { type, props = {} } = rootElement
+        let children = props.children
+        if (typeof children === 'string' || typeof children === 'number') {
+            children = [children]
+        }
+        console.log(children)
+        return el(type, props, children.map(res => this.getVdomTree(res)))
     }
     updateComponent(prevElement, nextElement) {
         this._currentElement = nextElement
