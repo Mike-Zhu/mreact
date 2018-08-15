@@ -2,25 +2,39 @@
   "name": "Mreact-demo",
   "version": "v0.0.1",
   "scripts": {
-    "build": "webpack --progress",
-    "watch": "webpack --progress --colors --watch"
+    "start": "webpack && webpack-dev-server --open",
+    "test": "karma start",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "birdv3": "^0.3.33",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.1",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "http-server": "^0.10.0",
+    "mini-css-extract-plugin": "^0.2.0",
+    "postcss-loader": "^2.1.3",
+    "replace": "^0.3.0",
+    "style-loader": "^0.20.3",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.3.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.1",
+    "webpack-merge": "^4.1.2"
   },
   "dependencies": {
-    "babel-core": "^6.13.2",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-transform-class-properties": "^6.11.5",
-    "babel-plugin-transform-react-jsx": "^6.8.0",
-    "webpack": "^1.13.2"
-  },
-  "babel": {
-    "plugins": [
-      [
-        "transform-react-jsx",
-        {
-          "pragma": "Mreact.createElement"
-        }
-      ],
-      "transform-class-properties"
-    ]
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.24.1",
+    "babel-plugin-react-require": "^3.0.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1"
   }
 }
