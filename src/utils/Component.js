@@ -18,9 +18,13 @@ class Component {
         const renderedComponent = instantiateComponent(renderedElement)
         this._renderedComponent = renderedComponent
 
-        const _renderedNode = Reconciler.mountComponent(renderedComponent)
-        this._renderedNode = _renderedNode
-        return _renderedNode
+        const _Vnode = Reconciler.mountComponent(renderedComponent)
+        const _Dom = _Vnode.render()
+        _Dom._reactVnode = _Vnode
+        this._Vnode = _Vnode
+        this._Dom = _Dom
+        console.log(_Vnode)
+        return _Dom
     }
 
     setState(partialState) {

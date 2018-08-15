@@ -1579,13 +1579,9 @@ color-convert@^1.3.0, color-convert@^1.9.0:
   dependencies:
     color-name "1.1.1"
 
-color-name@1.1.1:
+color-name@1.1.1, color-name@^1.0.0:
   version "1.1.1"
   resolved "http://registry.npm.taobao.org/color-name/download/color-name-1.1.1.tgz#4b1415304cf50028ea81643643bd82ea05803689"
-
-color-name@^1.0.0:
-  version "1.1.3"
-  resolved "http://registry.npm.taobao.org/color-name/download/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
 color-string@^0.3.0:
   version "0.3.0"
@@ -2175,11 +2171,7 @@ domain-browser@^1.1.1:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/domain-browser/download/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
 
-domelementtype@1:
-  version "1.3.0"
-  resolved "http://registry.npm.taobao.org/domelementtype/download/domelementtype-1.3.0.tgz#b17aed82e8ab59e52dd9c19b1756e0fc187204c2"
-
-domelementtype@~1.1.1:
+domelementtype@1, domelementtype@~1.1.1:
   version "1.1.3"
   resolved "http://registry.npm.taobao.org/domelementtype/download/domelementtype-1.1.3.tgz#bd28773e2642881aec51544924299c5cd822185b"
 
@@ -2592,13 +2584,9 @@ extract-text-webpack-plugin@^4.0.0-beta.0:
     schema-utils "^0.4.5"
     webpack-sources "^1.1.0"
 
-extsprintf@1.3.0:
+extsprintf@1.3.0, extsprintf@^1.2.0:
   version "1.3.0"
   resolved "http://registry.npm.taobao.org/extsprintf/download/extsprintf-1.3.0.tgz#96918440e3041a7a414f8c52e3c574eb3c3e1e05"
-
-extsprintf@^1.2.0:
-  version "1.4.0"
-  resolved "http://registry.npm.taobao.org/extsprintf/download/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
 fast-deep-equal@^2.0.1:
   version "2.0.1"
@@ -3646,11 +3634,7 @@ js-base64@^2.1.9:
   version "2.4.8"
   resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.4.8.tgz#57a9b130888f956834aa40c5b165ba59c758f033"
 
-"js-tokens@^3.0.0 || ^4.0.0":
-  version "4.0.0"
-  resolved "http://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
-
-js-tokens@^3.0.2:
+"js-tokens@^3.0.0 || ^4.0.0", js-tokens@^3.0.2:
   version "3.0.2"
   resolved "http://registry.npm.taobao.org/js-tokens/download/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
@@ -4035,13 +4019,13 @@ mime-db@~1.20.0:
   version "1.20.0"
   resolved "http://registry.npm.taobao.org/mime-db/download/mime-db-1.20.0.tgz#496f90fd01fe0e031c8823ec3aa9450ffda18ed8"
 
-mime-types@2.1.8:
+mime-types@2.1.8, mime-types@~2.1.7:
   version "2.1.8"
   resolved "http://registry.npm.taobao.org/mime-types/download/mime-types-2.1.8.tgz#faf57823de04bc7cbff4ee82c6b63946e812ae72"
   dependencies:
     mime-db "~1.20.0"
 
-mime-types@^2.1.11, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.6, mime-types@~2.1.7:
+mime-types@^2.1.11, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.6:
   version "2.1.19"
   resolved "http://registry.npm.taobao.org/mime-types/download/mime-types-2.1.19.tgz#71e464537a7ef81c15f2db9d97e913fc0ff606f0"
   dependencies:
@@ -5095,13 +5079,9 @@ qs@4.0.0:
   version "4.0.0"
   resolved "http://registry.npm.taobao.org/qs/download/qs-4.0.0.tgz#c31d9b74ec27df75e543a86c78728ed8d4623607"
 
-qs@6.5.1:
+qs@6.5.1, "qs@>= 0.4.0":
   version "6.5.1"
   resolved "http://registry.npm.taobao.org/qs/download/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
-
-"qs@>= 0.4.0":
-  version "6.5.2"
-  resolved "http://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
 
 qs@~2.3.3:
   version "2.3.3"
@@ -5864,17 +5844,13 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-statuses@1, "statuses@>= 1.3.1 < 2", "statuses@>= 1.4.0 < 2":
-  version "1.5.0"
-  resolved "http://registry.npm.taobao.org/statuses/download/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
+statuses@1, "statuses@>= 1.3.1 < 2", "statuses@>= 1.4.0 < 2", statuses@~1.4.0:
+  version "1.4.0"
+  resolved "http://registry.npm.taobao.org/statuses/download/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
 
 statuses@~1.2.1:
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/statuses/download/statuses-1.2.1.tgz#dded45cc18256d51ed40aec142489d5c61026d28"
-
-statuses@~1.4.0:
-  version "1.4.0"
-  resolved "http://registry.npm.taobao.org/statuses/download/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
 
 stream-browserify@^2.0.1:
   version "2.0.1"

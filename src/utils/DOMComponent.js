@@ -68,19 +68,14 @@ class DOMComponent extends MultiChild {
     }
 
     mountComponent() {
-        const vdomTree = el
-        // create real dom nodes
-        const node = this.getVdomTree(this._currentElement)
-        this._domNode = node
-        return node
-        // this._updateNodeProperties({}, this._currentElement.props)
-        // this._createInitialDOMChildren(this._currentElement.props)
+        return this.getVdomTree(this._currentElement)
     }
+
     getVdomTree(rootElement) {
         if (typeof rootElement.type === 'function') {
-            const node = Reconciler.mountComponent(new rootElement.type(rootElement.props))
-            console.log(node)
-            return node
+            const instantiateCompo = new rootElement.type(rootElement.props)
+            const dom = Reconciler.mountComponent(instantiateCompo)
+            return dom._reactVnode
         } else if (typeof rootElement === 'string' || typeof rootElement === 'number') {
             return rootElement
         }
