@@ -1,5 +1,5 @@
 {
-  "name": "Mreact-demo",
+  "name": "mReact",
   "version": "v0.0.1",
   "scripts": {
     "start": "webpack && webpack-dev-server --open",

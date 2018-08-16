@@ -74,13 +74,15 @@ class DOMComponent extends MultiChild {
     getVdomTree(rootElement) {
         if (typeof rootElement.type === 'function') {
             const instantiateCompo = new rootElement.type(rootElement.props)
-            const dom = Reconciler.mountComponent(instantiateCompo)
-            return dom._reactVnode
+            const _reactVnode = Reconciler.mountComponent(instantiateCompo)
+            return _reactVnode
         } else if (typeof rootElement === 'string' || typeof rootElement === 'number') {
             return rootElement
         }
         const { type, props = {} } = rootElement
         let children = props.children
+        rootElement.children = children
+        delete props.children
         if (typeof children === 'string' || typeof children === 'number') {
             children = [children]
         }

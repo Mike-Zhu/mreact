@@ -33,7 +33,6 @@ Element.prototype.render = function () {
     var $el = document.createElement(this.tagName)
     var props = this.props
     var children = this.children
-    delete props.children
     for (var propsName in props) {
         var propsValue = props[propsName]
         $el.setAttribute(propsName, propsValue)
@@ -44,6 +43,9 @@ Element.prototype.render = function () {
             : document.createTextNode(child)
         $el.appendChild(childEl)
     });
+    if (this.__instanseReactComponent) {
+        this.__instanseReactComponent._currentNode = $el
+    }
     return $el
 }
 
