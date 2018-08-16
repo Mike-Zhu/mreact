@@ -10,6 +10,8 @@ import _, {
 export default patch
 
 function patch(node, patches) {
+    console.log(node, patches)
+    console.log(new Date().getTime())
     var positionCache = {
         index: 0
     }

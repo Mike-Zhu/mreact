@@ -6,6 +6,8 @@ class App extends Component {
     this.state = {
       first: 1
     }
+  }
+  compomentDidMount() {
     setTimeout(() => {
       this.setState({
         first: 2
@@ -39,11 +41,13 @@ class SmallHeader extends Component {
     this.state = {
       aaa: 22
     }
-    // setTimeout(() => {
-    //   this.setState({
-    //     aaa: 333
-    //   })
-    // }, 3000)
+  }
+  compomentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        aaa: 333
+      })
+    }, 3000)
   }
   render() {
     return (

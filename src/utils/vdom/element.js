@@ -30,14 +30,16 @@ export default function Element(tagName, props, children) {
 }
 
 Element.prototype.render = function () {
-    var $el = document.createElement(this.tagName)
+    var $el = this.tagName === 'fragment'
+        ? document.createDocumentFragment()
+        : document.createElement(this.tagName)
     var props = this.props
     var children = this.children
     for (var propsName in props) {
         var propsValue = props[propsName]
-        if(propsName === "style"){
+        if (propsName === "style") {
             let styleObject = propsValue
-            for(var styleKey in propsValue){
+            for (var styleKey in propsValue) {
                 $el.style[styleKey] = propsValue[styleKey]
             }
             continue

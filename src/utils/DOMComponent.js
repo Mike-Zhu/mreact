@@ -74,10 +74,11 @@ export default class DOMComponent extends MultiChild {
     getVdomTree(rootElement) {
         if (typeof rootElement.type === 'function') {
             const instantiateCompo = new rootElement.type(rootElement.props)
+            instantiateCompo._construct(rootElement)
             const _reactVnode = Reconciler.mountComponent(instantiateCompo)
             return _reactVnode
         } else if (typeof rootElement === 'string' || typeof rootElement === 'number') {
-            return rootElement
+            return el('span', {}, [rootElement])
         }
         const { type, props = {} } = rootElement
         let children = props.children

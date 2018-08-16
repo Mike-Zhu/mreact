@@ -9,7 +9,6 @@ class Component {
         this._currentElement = null
         this._currentVnode = null
         this._currentNode = null
-        console.log(this)
     }
 
     _construct(element) {
@@ -17,9 +16,16 @@ class Component {
     }
 
     mountComponent() {
+        console.log(this)
+        if(this._currentVnode){
+            return _Vnode
+        }
         const _Vnode = this.getVnode()
         _Vnode.__instanseReactComponent = this
         this._currentVnode = _Vnode
+        if(this.compomentDidMount){
+            this.compomentDidMount()
+        }
         return _Vnode
     }
 
@@ -43,27 +49,19 @@ class Component {
         // //这里负责state变化那一部分
         // //重新设置一些参数
         this._currentElement = nextElement
-
+        
         this.props = nextElement.props
         this.state = this._pendingState || this.state
         this._pendingState = null
 
         const _currentVnode = this._currentVnode
         const _nextVnode = this.getVnode()
-
+        this._currentVnode = _nextVnode
         if (shouldUpdateComponent(_currentVnode, _nextVnode)) {
             const diffList = diff(_currentVnode, _nextVnode)
             const _currentNode = this._currentNode
-            console.log(_currentNode)
-            console.log(diffList)
-            // patch(_currentNode, diffList)
-            //     Reconciler.receiveComponent(this._renderedComponent, nextRenderedElement)
+            patch(_currentNode, diffList)
         } else {
-            //     Reconciler.unmountComponent(this._renderedComponent)
-            //     const nextRenderedComponent = instantiateComponent(nextRenderedElement)
-            //     this._renderedNode = Reconciler.mountComponent(nextRenderedElement)
-
-            //     DOM.replaceNode(this._renderedComponent._domNode, this._renderedNode)
 
         }
     }
