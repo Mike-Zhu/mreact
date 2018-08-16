@@ -1,11 +1,5 @@
-const Element = require('./Element.js')
-const Component = require('./Component.js')
-const Mount = require('./Mount.js')
+import createElement from './Element.js'
+import Component from './Component.js'
+import render from './Mount.js'
 
-
-
-module.exports = {
-    createElement:Element.createElement,
-    Component:Component,
-    render:Mount.render
-}
+export default { createElement, Component, render }

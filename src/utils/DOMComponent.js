@@ -1,10 +1,10 @@
-const MultiChild = require('./MultiChild')
-const Dom = require('./DOM')
-const el = require('./vdom/element')
-const instantiateComponent = require('./instantiateComponent')
-const Reconciler = require('./Reconciler')
+import MultiChild from './MultiChild'
+import * as Dom from './DOM'
+import el from './vdom/element'
+import instantiateComponent from './instantiateComponent'
+import * as Reconciler from './Reconciler'
 
-class DOMComponent extends MultiChild {
+export default class DOMComponent extends MultiChild {
     constructor(element) {
         super()
         this._currentElement = element
@@ -95,7 +95,6 @@ class DOMComponent extends MultiChild {
     }
 }
 
-module.exports = DOMComponent
 
 function updateStyles(node, style) {
     Object.keys(style).forEach(styleName => {

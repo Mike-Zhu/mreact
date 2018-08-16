@@ -86,6 +86,13 @@ function diffProps(oldNode, newNode) {
         propsPatch = {}
     let allProps = Object.assign({}, oldProps, newProps)
     for (var key in allProps) {
+        if (key === "style") {
+            if (JSON.stringify(oldProps[key]) !== JSON.stringify(oldProps[key])) {
+                count++
+                propsPatch[key] = newProps[key]
+            }
+            continue
+        }
         if (oldProps[key] !== newProps[key] && key !== "key") {
             count++
             propsPatch[key] = newProps[key]

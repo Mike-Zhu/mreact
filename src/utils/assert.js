@@ -4,4 +4,4 @@ function assert(val) {
     }
   }
   
-  module.exports = assert
+export default assert

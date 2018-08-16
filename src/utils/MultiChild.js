@@ -1,9 +1,9 @@
-const ChildReconciler = require('./ChildRecinciler')
-const Reconciler = require('./Reconciler')
-const traverseAllChildren = require('./traverseAllChildren')
-const { OPERATIONS, UPDATE_TYPES } = require('./operations')
-const DOM = require('./DOM')
-const assert = require('./assert')
+import * as ChildReconciler from './ChildRecinciler'
+import * as Reconciler from './Reconciler'
+import traverseAllChildren from './traverseAllChildren'
+import { OPERATIONS, UPDATE_TYPES } from './operations'
+import * as DOM from './DOM'
+import assert from './assert'
 
 function flattenChildren(children) {
   const fattenedElement = {}
@@ -44,7 +44,7 @@ function processQueue(parentNode, updates) {
 }
 
 
-class MultiChild {
+export default class MultiChild {
   constructor() {
     this._renderedChildren = null
   }
@@ -143,5 +143,3 @@ class MultiChild {
 
   }
 }
-
-module.exports = MultiChild

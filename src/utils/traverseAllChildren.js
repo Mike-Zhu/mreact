@@ -8,7 +8,7 @@ function getComponentKey(component, index) {
   return index.toString(36)
 }
 
-function traverseAllChildren(children, callback, traverseContext) {
+export default function traverseAllChildren(children, callback, traverseContext) {
   return traverseAllChildrenImpl(children, '', callback, traverseContext)
 }
 
@@ -47,4 +47,3 @@ function traverseAllChildrenImpl(
   return subtreeCount
 }
 
-module.exports = traverseAllChildren

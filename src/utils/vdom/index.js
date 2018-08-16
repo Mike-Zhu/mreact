@@ -1,9 +1,3 @@
-import el from './element'
-import diff from './diff'
-import patch from './patch'
-
-module.exports = {
-    el,
-    diff,
-    patch
-}
+export import el from './element'
+export import diff from './diff'
+export import patch from './patch'

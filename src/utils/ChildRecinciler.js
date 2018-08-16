@@ -1,8 +1,8 @@
-const traverseAllChildren = require('./traverseAllChildren')
-const Reconciler = require('./Reconciler')
+import traverseAllChildren  from './traverseAllChildren'
+import * as Reconciler from './Reconciler'
 
 
-function instantiateChild(childInstances, child, name) {
+export function instantiateChild(childInstances, child, name) {
   // don't know wtf happened here, cannot resolve it at top level
   // hack it in
   const initiateComponent = require('./instantiateComponent')
@@ -12,7 +12,7 @@ function instantiateChild(childInstances, child, name) {
   }
 }
 
-function instantiateChildren(children) {
+export function instantiateChildren(children) {
   let childInstances = {}
 
   traverseAllChildren(children, instantiateChild, childInstances)
@@ -21,7 +21,7 @@ function instantiateChildren(children) {
 }
 
 
-function unmountChildren(renderedChildren) {
+export function unmountChildren(renderedChildren) {
   if (!renderedChildren) return
 
   Object.keys(renderedChildren).forEach(childKey => {
@@ -29,7 +29,7 @@ function unmountChildren(renderedChildren) {
   })
 }
 
-function updateChildren(
+export function updateChildren(
   prevChildren, // instance tree
   nextChildren, // element tree
   mountNodes,
@@ -78,9 +78,4 @@ function updateChildren(
 
 function shouldUpdateComponent(prevElement, nextElement) {
   return prevElement.type === nextElement.type
-}
-module.exports = {
-  instantiateChildren,
-  updateChildren,
-  unmountChildren
 }

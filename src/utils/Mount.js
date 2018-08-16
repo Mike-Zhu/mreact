@@ -1,6 +1,6 @@
-const instantiateComponent = require('./instantiateComponent')
-const Reconciler = require('./Reconciler')
-const DOM = require('./DOM')
+import instantiateComponent from './instantiateComponent'
+import * as Reconciler from './Reconciler'
+import * as DOM from './DOM'
 
 
 function mount(element, node) {
@@ -8,15 +8,10 @@ function mount(element, node) {
     const component = instantiateComponent(element)
     //component => element
     const renderedNode = Reconciler.mountComponent(component)
-
     DOM.empty(node)
     DOM.appendChildren(node, renderedNode.render())
 }
 
-function render(element, node) {
+export default function render(element, node) {
     mount(element, node)
-}
-
-module.exports = {
-    render
 }

@@ -1,6 +1,6 @@
-const DOMComponent = require('./DOMComponent')
+import DOMComponent from './DOMComponent'
 
-function instantiateComponent(element) {
+export default function instantiateComponent(element) {
     let componentInstance
     if (typeof element.type === 'function') {
         componentInstance = new element.type(element.props)
@@ -15,5 +15,3 @@ function instantiateComponent(element) {
     }
     return componentInstance
 }
-
-module.exports = instantiateComponent

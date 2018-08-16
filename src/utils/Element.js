@@ -1,4 +1,4 @@
-function createElement(type, config, children) {
+export default function createElement(type, config, children) {
     const props = Object.assign({}, config)
     const childrenLength = [].slice.call(arguments).length - 2
     if (childrenLength > 1) {
@@ -10,7 +10,4 @@ function createElement(type, config, children) {
         type,
         props
     }
-}
-module.exports = {
-    createElement
 }

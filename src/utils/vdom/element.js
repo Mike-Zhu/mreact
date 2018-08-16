@@ -1,6 +1,6 @@
-const _ = require('./util')
+import _ from './util'
 
-function Element(tagName, props, children) {
+export default function Element(tagName, props, children) {
     if (!(this instanceof Element)) {
         return new Element(tagName, props, children)
     }
@@ -35,6 +35,13 @@ Element.prototype.render = function () {
     var children = this.children
     for (var propsName in props) {
         var propsValue = props[propsName]
+        if(propsName === "style"){
+            let styleObject = propsValue
+            for(var styleKey in propsValue){
+                $el.style[styleKey] = propsValue[styleKey]
+            }
+            continue
+        }
         $el.setAttribute(propsName, propsValue)
     }
     children.forEach(function (child) {
@@ -48,5 +55,3 @@ Element.prototype.render = function () {
     }
     return $el
 }
-
-module.exports = Element
