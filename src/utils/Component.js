@@ -3,6 +3,8 @@ import * as Reconciler from './Reconciler'
 import diff from './vdom/diff'
 import patch from './vdom/patch'
 
+const ReactComponentSymbol = {}
+
 class Component {
     constructor(props) {
         this.props = props
@@ -11,21 +13,19 @@ class Component {
         this._currentNode = null
     }
 
+    static isReactComponent = ReactComponentSymbol
+
     _construct(element) {
         this._currentElement = element
     }
 
     mountComponent() {
-        console.log(this)
-        if(this._currentVnode){
+        if (this._currentVnode) {
             return _Vnode
         }
         const _Vnode = this.getVnode()
         _Vnode.__instanseReactComponent = this
         this._currentVnode = _Vnode
-        if(this.compomentDidMount){
-            this.compomentDidMount()
-        }
         return _Vnode
     }
 
@@ -37,7 +37,6 @@ class Component {
     }
 
     setState(partialState) {
-        // debugger;
         this._pendingState = Object.assign({}, this.state, partialState)
         this.updateComponent(this._currentElement, this._currentElement)
     }
@@ -46,10 +45,8 @@ class Component {
         if (preElement !== nextElement) {
             //表示是props变化，重组了Element
         }
-        // //这里负责state变化那一部分
-        // //重新设置一些参数
+
         this._currentElement = nextElement
-        
         this.props = nextElement.props
         this.state = this._pendingState || this.state
         this._pendingState = null

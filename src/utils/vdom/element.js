@@ -53,7 +53,9 @@ Element.prototype.render = function () {
         $el.appendChild(childEl)
     });
     if (this.__instanseReactComponent) {
-        this.__instanseReactComponent._currentNode = $el
+        const instance = this.__instanseReactComponent
+        instance._currentNode = $el
+        instance.compomentDidMount && instance.compomentDidMount()
     }
     return $el
 }
