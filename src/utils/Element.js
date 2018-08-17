@@ -3,8 +3,8 @@ export default function createElement(type, config, children) {
     const childrenLength = [].slice.call(arguments).length - 2
     if (childrenLength > 1) {
         props.children = [].slice.call(arguments, 2)
-    } else if (childrenLength === 1) {
-        props.children = [children]
+    } else if (childrenLength === 1 && children !== undefined) {
+        props.children = children
     }
     return {
         type,

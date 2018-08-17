@@ -1,4 +1,4 @@
-import Mreact from './utils/mini-react'
+import Mreact from './utils'
 const { Component } = Mreact
 class App extends Component {
   constructor(props) {
@@ -6,14 +6,20 @@ class App extends Component {
     this.state = {
       first: 1
     }
-  }
-  compomentDidMount() {
+
     setTimeout(() => {
       this.setState({
         first: 2
       })
     }, 1000)
   }
+  // compomentDidMount() {
+  //   setTimeout(() => {
+  //     this.setState({
+  //       first: 2
+  //     })
+  //   }, 1000)
+  // }
 
   render() {
     return (

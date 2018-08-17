@@ -1,4 +1,4 @@
-import { renderComponent } from './virturn-dom'
+import { renderComponent, compareTwoVnodes } from './virturn-dom'
 
 const ReactComponentSymbol = {}
 
@@ -44,8 +44,9 @@ class Component {
         let state = this.state
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
+        compareTwoVnodes(vnode, newVnode, node)
     }
-    
+
     mountComponent() {
         if (this._currentVnode) {
             return _Vnode

@@ -23,9 +23,13 @@ export function initElement(vnode) {
     const { children } = props
     let node = document.createElement(type)
     setProps(node, props)
-    children.forEach(childVnode => {
-        DOM.appendChildren(node, initVnode(childVnode))
-    });
+    if (Array.isArray(children)) {
+        children.forEach(childVnode => {
+            DOM.appendChildren(node, initVnode(childVnode))
+        })
+    } else {
+        DOM.appendChildren(node, initText(children))
+    }
     return node
 }
 
@@ -52,6 +56,7 @@ export function destroyVnode(oldVnode, node) {
 
 export function compareTwoVnodes(oldVnode, newVnode, node) {
     let newNode = node
+    console.log(newVnode)
     if (!newVnode) {
         //如果新节点是空，销毁node并且移移除
         destroyVnode(oldVnode, node)
@@ -60,7 +65,7 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
         //type或者key不同，完全重构
         destroyVnode(oldVnode, node)
         newNode = initVnode(newVnode)
-        node.parentNode.replaceChile(newNode, node)
+        node.parentNode.replaceChild(newNode, node)
     } else {
         //非上述情况则更新
         newNode = updateVnode(oldVnode, newVnode, node)
@@ -70,6 +75,7 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
 
 export function updateVnode(oldVnode, newVnode, node) {
     const { type } = oldVnode
+    console.log(type)
     if (!type) {
         return node
     }
