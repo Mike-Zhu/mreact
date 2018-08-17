@@ -1,5 +1,5 @@
 import * as DOM from './DOM'
-import { getUid } from './utils'
+import { getUid, prospDiffType } from './utils'
 
 export function initVnode(vnode) {
     let { type } = vnode,
@@ -93,12 +93,32 @@ export function updateVcomponent(oldVnode, newVnode, node) {
 }
 
 export function updateElement(oldVnode, newVnode, node) {
-    console.log('update ele')
+    let diffProps = getDiffProps(oldVnode.props, newVnode.props)
+    console.log(node,diffProps)
+    diffProps && setProps(node, diffProps)
 }
 
+export function getDiffProps(props, newProps) {
+    let changeProps = {},
+        count = 0,
+        ignoreList = ['children', 'key']
+    for (let name in props) {
+        if (newProps[name] !== props[name] && ignoreList.indexOf(name) < 0) {
+            changeProps[name] = newProps[name]
+            count++
+        }
+    }
+    for (let name in newProps) {
+        if (!props.hasOwnProperty(name) && ignoreList.indexOf(name) < 0) {
+            changeProps[name] = newProps[name]
+            count++
+        }
+    }
+    return count > 0 && changeProps
+}
 
 export function setProps(node, props) {
-    let ignoreList = ['children']
+    let ignoreList = ['children', 'key']
     for (let name in props) {
         if (ignoreList.find(res => res === name)) {
             continue

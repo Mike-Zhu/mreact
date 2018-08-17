@@ -4,12 +4,18 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      first: 1
+      first: 1,
+      color: {
+        color: "red"
+      }
     }
 
     setTimeout(() => {
       this.setState({
-        first: 2
+        first: 2,
+        color: {
+          color: "yellow"
+        }
       })
     }, 1000)
   }
@@ -23,10 +29,10 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div style={this.state.color}>
         {this.state.first}
         <span>
-          <h1 style={{ color: 'red' }} >Heading 1</h1>
+          <h1  >Heading 1</h1>
           <SmallHeader />
           <h2 style={{ color: 'yellow' }} >Heading 2</h2>
           <div>
