@@ -5,8 +5,29 @@ import patch from './vdom/patch'
 
 const ReactComponentSymbol = {}
 
+class Updater {
+    constructor(instance) {
+        this.instance = instance
+        this.pendingStates = []
+    }
+
+    addState(nextState) {
+        this.pendingStates.push(nextState)
+    }
+
+    getState() {
+        const { instance } = this
+        let _pendingState = {}
+        while (this.pendingStates.length > 0) {
+            let partialState = this.pendingStates.shift()
+            _pendingState = Object.assign({}, instance.state, partialState)
+        }
+        return _pendingState
+    }
+}
 class Component {
     constructor(props) {
+        this.$updater = new Updater(this)
         this.props = props
         this._currentElement = null
         this._currentVnode = null
@@ -28,39 +49,13 @@ class Component {
         this._currentVnode = _Vnode
         return _Vnode
     }
-
-    getVnode() {
-        const renderedElement = this.render()
-        const _vComponent = instantiateComponent(renderedElement)
-        const _Vnode = Reconciler.mountComponent(_vComponent)
-        return _Vnode
-    }
-
     setState(partialState) {
         this._pendingState = Object.assign({}, this.state, partialState)
         this.updateComponent(this._currentElement, this._currentElement)
     }
 
     updateComponent(preElement, nextElement) {
-        if (preElement !== nextElement) {
-            //表示是props变化，重组了Element
-        }
 
-        this._currentElement = nextElement
-        this.props = nextElement.props
-        this.state = this._pendingState || this.state
-        this._pendingState = null
-
-        const _currentVnode = this._currentVnode
-        const _nextVnode = this.getVnode()
-        this._currentVnode = _nextVnode
-        if (shouldUpdateComponent(_currentVnode, _nextVnode)) {
-            const diffList = diff(_currentVnode, _nextVnode)
-            const _currentNode = this._currentNode
-            patch(_currentNode, diffList)
-        } else {
-
-        }
     }
 }
 

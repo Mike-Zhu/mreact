@@ -1,17 +1,9 @@
-import instantiateComponent from './instantiateComponent'
-import * as Reconciler from './Reconciler'
 import * as DOM from './DOM'
+import { initVnode } from './virturn-dom'
 
-
-function mount(element, node) {
+export default function mount(element, node) {
     //element => component
-    const component = instantiateComponent(element)
-    //component => element
-    const renderedNode = Reconciler.mountComponent(component)
+    const renderedNode = initVnode(element)
     DOM.empty(node)
-    DOM.appendChildren(node, renderedNode.render())
-}
-
-export default function render(element, node) {
-    mount(element, node)
+    DOM.appendChildren(node, renderedNode)
 }

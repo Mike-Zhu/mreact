@@ -9,6 +9,8 @@ export function appendChildren(node, children) {
         children.forEach(child => {
             node.appendChild(child)
         })
+    } else if (typeof children === 'string' || typeof children === 'number') {
+        node.append(children)
     } else {
         node.appendChild(children)
     }

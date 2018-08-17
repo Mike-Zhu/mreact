@@ -4,7 +4,7 @@ export default function createElement(type, config, children) {
     if (childrenLength > 1) {
         props.children = [].slice.call(arguments, 2)
     } else if (childrenLength === 1) {
-        props.children = children
+        props.children = [children]
     }
     return {
         type,

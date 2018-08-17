@@ -42,13 +42,13 @@ class SmallHeader extends Component {
       aaa: 22
     }
   }
-  compomentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        aaa: 333
-      })
-    }, 3000)
-  }
+  // compomentDidMount() {
+  //   setTimeout(() => {
+  //     this.setState({
+  //       aaa: 333
+  //     })
+  //   }, 3000)
+  // }
   render() {
     return (
       <h5>{this.state.aaa}</h5>
