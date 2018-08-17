@@ -1,7 +1,4 @@
-import instantiateComponent from './instantiateComponent'
-import * as Reconciler from './Reconciler'
-import diff from './vdom/diff'
-import patch from './vdom/patch'
+import { renderComponent } from './virturn-dom'
 
 const ReactComponentSymbol = {}
 
@@ -24,22 +21,31 @@ class Updater {
         }
         return _pendingState
     }
+
+    updateComponent() {
+
+    }
 }
+
 class Component {
     constructor(props) {
         this.$updater = new Updater(this)
+        this.$cache = {
+            isMounted: false
+        }
         this.props = props
-        this._currentElement = null
-        this._currentVnode = null
-        this._currentNode = null
     }
 
     static isReactComponent = ReactComponentSymbol
 
-    _construct(element) {
-        this._currentElement = element
+    forceUpdate() {
+        let { $updater, $cache, props, context } = this
+        this.state = $updater.getState()
+        let state = this.state
+        let { vnode, node } = $cache
+        let newVnode = renderComponent(this)
     }
-
+    
     mountComponent() {
         if (this._currentVnode) {
             return _Vnode
@@ -50,12 +56,8 @@ class Component {
         return _Vnode
     }
     setState(partialState) {
-        this._pendingState = Object.assign({}, this.state, partialState)
-        this.updateComponent(this._currentElement, this._currentElement)
-    }
-
-    updateComponent(preElement, nextElement) {
-
+        this.$updater.addState(partialState)
+        this.forceUpdate()
     }
 }
 
