@@ -34,6 +34,7 @@ class App extends Component {
         <span>
           <h1 style={this.state.color} >Heading 1</h1>
           <SmallHeader />
+          <SmallHeader />
           <h2 >Heading {this.state.first}2</h2>
           <div>
             <h1>{this.state.first}</h1>
@@ -53,9 +54,16 @@ class SmallHeader extends Component {
     this.state = {
       aaa: 22
     }
+    setTimeout(() => {
+      this.setState({
+        aaa: 33333333333333333
+      })
+    }, 3000)
+  }
+  compomentDidMount() {
+
   }
   render() {
-    console.log(this.state)
     return (
       <h5>{this.state.aaa}</h5>
     )

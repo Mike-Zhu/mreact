@@ -47,8 +47,6 @@ class Component {
         let state = this.state
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
-        console.log(this)
-        console.log(newVnode)
         return compareTwoVnodes(vnode, newVnode, node)
     }
 
