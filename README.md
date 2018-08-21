@@ -3,6 +3,7 @@
 生产不建议从此轮子，推荐 [react-lite](https://github.com/Lucifier129/react-lite).  
 
 ### *Todo*
+- life-cycle
 - event-system
 - state-batch
 
