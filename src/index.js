@@ -8,16 +8,13 @@ class App extends Component {
       color: {
         color: "red"
       }
-    }
-
-    setTimeout(() => {
+    } 
+    let first = 1
+    setInterval(() => {
       this.setState({
-        first: 2,
-        color: {
-          color: "yellow"
-        }
+        first: ++first,
       })
-    }, 1000)
+    }, 200)
   }
   // compomentDidMount() {
   //   setTimeout(() => {
@@ -33,7 +30,6 @@ class App extends Component {
         {this.state.first}
         <span>
           <h1 style={this.state.color} >Heading 1</h1>
-          <SmallHeader />
           <SmallHeader />
           <h2 >Heading {this.state.first}2</h2>
           <div>
@@ -52,13 +48,14 @@ class SmallHeader extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      aaa: 22
+      aaa: 1
     }
-    setTimeout(() => {
+    let aaa = 1
+    setInterval(() => {
       this.setState({
-        aaa: 33333333333333333
+        aaa: ++aaa
       })
-    }, 3000)
+    }, 300)
   }
   compomentDidMount() {
 

@@ -67,7 +67,6 @@ export function destroyVnode(oldVnode, node) {
 }
 
 export function compareTwoVnodes(oldVnode, newVnode, node) {
-    // console.log(oldVnode, newVnode, node)
     let newNode = node
     if (!newVnode) {
         //如果新节点是空，销毁node并且移移除
@@ -87,9 +86,11 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
 
 export function updateVnode(oldVnode, newVnode, node) {
     const { type } = oldVnode
-    // console.log(oldVnode, newVnode, node)
     if (!type) {
-        return node.data = newVnode
+        if(oldVnode !== newVnode){
+            node.data = newVnode
+        }
+        return node
     }
     if (typeof type === 'function') {
         return updateVcomponent(oldVnode, newVnode, node)
