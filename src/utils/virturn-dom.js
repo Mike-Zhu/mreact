@@ -1,6 +1,17 @@
 import * as DOM from './DOM'
-import { getUid, prospDiffType } from './utils'
+import { getUid } from './utils'
+import { diffList, patchChildren } from './list-diff'
 
+export function createVcomponent({ type, props }) {
+    let vComponent = {
+        type,
+        props
+    }
+    if (typeof type === 'function') {
+        vComponent.uid = getUid()
+    }
+    return vComponent
+}
 export function initVnode(vnode) {
     let { type } = vnode,
         node = null
@@ -33,13 +44,14 @@ export function initElement(vnode) {
     return node
 }
 
-export function initComponent(oldComponent) {
-    const { type: Component, props } = oldComponent
+export function initComponent(vComponent) {
+    const { type: Component, props, uid } = vComponent
     const component = new Component(props)
     const { $cache: cache } = component
     const vnode = renderComponent(component)
     const node = initVnode(vnode)
-    vnode.uid = getUid()
+    node.cache = node.cache || {}
+    node.cache[uid] = component
     cache.vnode = vnode
     cache.node = node
     cache.isMounted = true
@@ -55,8 +67,8 @@ export function destroyVnode(oldVnode, node) {
 }
 
 export function compareTwoVnodes(oldVnode, newVnode, node) {
+    // console.log(oldVnode, newVnode, node)
     let newNode = node
-    console.log(newVnode)
     if (!newVnode) {
         //如果新节点是空，销毁node并且移移除
         destroyVnode(oldVnode, node)
@@ -75,9 +87,9 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
 
 export function updateVnode(oldVnode, newVnode, node) {
     const { type } = oldVnode
-    console.log(type)
+    // console.log(oldVnode, newVnode, node)
     if (!type) {
-        return node
+        return node.data = newVnode
     }
     if (typeof type === 'function') {
         return updateVcomponent(oldVnode, newVnode, node)
@@ -88,14 +100,28 @@ export function updateVnode(oldVnode, newVnode, node) {
     }
 }
 
-export function updateVcomponent(oldVnode, newVnode, node) {
-
+export function updateVcomponent(vcomponent, newVcomponent, node) {
+    let uid = vcomponent.uid
+    let component = node.cache[uid]
+    let { $updater: updater, $cache: cache } = component
+    node.cache[newVcomponent.uid] = component
+    component.forceUpdate()
+    return cache.node
 }
 
 export function updateElement(oldVnode, newVnode, node) {
     let diffProps = getDiffProps(oldVnode.props, newVnode.props)
-    console.log(node,diffProps)
     diffProps && setProps(node, diffProps)
+    updateChildren(oldVnode, newVnode, node)
+}
+
+export function updateChildren(oldVnode, newVnode, node) {
+    let { diff, newChildren,children } = diffList(oldVnode, newVnode)
+    patchChildren(node, diff)
+    let childNodes = node.childNodes
+    for (let i = 0; i < children.length; i++) {
+        compareTwoVnodes(children[i], newChildren[i], childNodes[i])
+    }
 }
 
 export function getDiffProps(props, newProps) {

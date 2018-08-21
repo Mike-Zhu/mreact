@@ -11,10 +11,12 @@ class Updater {
     addState(nextState) {
         this.pendingStates.push(nextState)
     }
-
+    emitUpdate() {
+        this.updateComponent()
+    }
     getState() {
         const { instance } = this
-        let _pendingState = {}
+        let _pendingState = instance.state
         while (this.pendingStates.length > 0) {
             let partialState = this.pendingStates.shift()
             _pendingState = Object.assign({}, instance.state, partialState)
@@ -23,7 +25,8 @@ class Updater {
     }
 
     updateComponent() {
-
+        let { instance } = this
+        instance.forceUpdate()
     }
 }
 
@@ -44,7 +47,9 @@ class Component {
         let state = this.state
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
-        compareTwoVnodes(vnode, newVnode, node)
+        console.log(this)
+        console.log(newVnode)
+        return compareTwoVnodes(vnode, newVnode, node)
     }
 
     mountComponent() {

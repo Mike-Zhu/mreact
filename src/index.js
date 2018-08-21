@@ -29,12 +29,12 @@ class App extends Component {
 
   render() {
     return (
-      <div style={this.state.color}>
+      <div>
         {this.state.first}
         <span>
-          <h1  >Heading 1</h1>
+          <h1 style={this.state.color} >Heading 1</h1>
           <SmallHeader />
-          <h2 style={{ color: 'yellow' }} >Heading 2</h2>
+          <h2 >Heading {this.state.first}2</h2>
           <div>
             <h1>{this.state.first}</h1>
             <h2>2</h2>
@@ -54,14 +54,8 @@ class SmallHeader extends Component {
       aaa: 22
     }
   }
-  // compomentDidMount() {
-  //   setTimeout(() => {
-  //     this.setState({
-  //       aaa: 333
-  //     })
-  //   }, 3000)
-  // }
   render() {
+    console.log(this.state)
     return (
       <h5>{this.state.aaa}</h5>
     )

@@ -1,3 +1,4 @@
+import { createVcomponent } from './virturn-dom'
 export default function createElement(type, config, children) {
     const props = Object.assign({}, config)
     const childrenLength = [].slice.call(arguments).length - 2
@@ -6,8 +7,8 @@ export default function createElement(type, config, children) {
     } else if (childrenLength === 1 && children !== undefined) {
         props.children = children
     }
-    return {
+    return createVcomponent({
         type,
         props
-    }
+    })
 }
