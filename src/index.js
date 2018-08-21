@@ -10,7 +10,7 @@ class App extends Component {
       }
     } 
     let first = 1
-    setInterval(() => {
+    setTimeout(() => {
       this.setState({
         first: ++first,
       })
@@ -31,7 +31,7 @@ class App extends Component {
         <span>
           <h1 style={this.state.color} >Heading 1</h1>
           <SmallHeader />
-          <h2 >Heading {this.state.first}2</h2>
+          <h2 >Heading 2 {this.state.first}</h2>
           <div>
             <h1>{this.state.first}</h1>
             <h2>2</h2>
@@ -51,7 +51,7 @@ class SmallHeader extends Component {
       aaa: 1
     }
     let aaa = 1
-    setInterval(() => {
+    setTimeout(() => {
       this.setState({
         aaa: ++aaa
       })

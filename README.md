@@ -1,3 +1,8 @@
 # React-like framework
-This project was cloned by [cyan33/learn-react-source-code](https://github.com/cyan33/learn-react-source-code).  
-It will be added more feature like [react](https://github.com/facebook/react) in the feture
+一个实验性的demo，功能来自 react 15.0.0 版本
+生产不建议从此轮子，推荐 [react-lite](https://github.com/Lucifier129/react-lite).  
+
+### *Todo*
+- event-system
+- state-batch
+
