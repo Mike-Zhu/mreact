@@ -39,7 +39,9 @@ class Component {
         this.props = props
     }
 
-    static isReactComponent = ReactComponentSymbol
+    isReactComponent() {
+        return ReactComponentSymbol
+    }
 
     forceUpdate() {
         let { $updater, $cache, props, context } = this

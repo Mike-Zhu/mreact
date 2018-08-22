@@ -1,14 +1,70 @@
 import { createVcomponent } from './virturn-dom'
+import Component from './Component'
+import {
+    VTEXT,
+    VELEMENT,
+    VSTATELESS,
+    VCOMPONENT
+} from './utils'
+
 export default function createElement(type, config, children) {
-    const props = Object.assign({}, config)
-    const childrenLength = [].slice.call(arguments).length - 2
+    let vtype = null
+    if (!type) {
+        vtype = VTEXT
+    } else if (typeof type === 'string') {
+        vtype = VELEMENT
+    } else if (typeof type === 'function') {
+        if (type.prototype.isReactComponent) {
+            vtype = VCOMPONENT
+        } else {
+            vtype = VSTATELESS
+        }
+    } else {
+        throw new Error(`React.createElement: unexpect type [ ${type} ]`)
+    }
+
+    let key = null,
+        ref = null
+    let finalProps = {}
+    if (config != null) {
+        for (let propKey in config) {
+            if (!config.hasOwnProperty(propKey)) {
+                continue
+            }
+            if (propKey === 'key') {
+                key = '' + config[propKey]
+            } else if (propKey === 'ref') {
+                ref = config[propKey]
+            } else {
+                finalProps[propKey] = config[propKey]
+            }
+        }
+    }
+    let defaultProps = type.defaultProps
+    if (defaultProps) {
+        for (let propKey in defaultProps) {
+            if (finalProps[propKey] === undefined) {
+                finalProps[propKey] = defaultProps[propKey]
+            }
+        }
+    }
+
+    let finalChildren = children
+    let childrenLength = arguments.length - 2
     if (childrenLength > 1) {
-        props.children = [].slice.call(arguments, 2)
-    } else if (childrenLength === 1 && children !== undefined) {
-        props.children = children
+        finalChildren = []
+        for (let i = 0; i < childrenLength; i++) {
+            finalChildren.push(arguments[i + 2])
+        }
+    }
+    if (finalChildren) {
+        finalProps.children = finalChildren
     }
     return createVcomponent({
         type,
-        props
+        vtype,
+        props: finalProps,
+        key,
+        ref
     })
 }

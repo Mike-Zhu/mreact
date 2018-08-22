@@ -1,26 +1,35 @@
 import * as DOM from './DOM'
 import { getUid } from './utils'
 import { diffList, patchChildren } from './list-diff'
+import {
+    VTEXT,
+    VELEMENT,
+    VSTATELESS,
+    VCOMPONENT,
+    getChildrenFromVcomponent
+} from './utils'
 
-export function createVcomponent({ type, props }) {
-    let vComponent = {
+export function createVcomponent({ vtype, type, props }) {
+    let vcomponent = {
         type,
-        props
+        props,
+        vtype
     }
-    if (typeof type === 'function') {
-        vComponent.uid = getUid()
+    if (vtype === VCOMPONENT) {
+        vcomponent.uid = getUid()
     }
-    return vComponent
+    return vcomponent
 }
-export function initVnode(vnode) {
-    let { type } = vnode,
+
+export function initVnode(vcomponent) {
+    let { vtype } = vcomponent,
         node = null
-    if (!type) {
-        node = initText(vnode)
-    } else if (typeof type === 'string') {
-        node = initElement(vnode)
-    } else if (typeof type === 'function') {
-        node = initComponent(vnode)
+    if (!vtype) { // init text
+        node = initText(vcomponent)
+    } else if (vtype === VELEMENT) {
+        node = initElement(vcomponent)
+    } else if (vtype === VCOMPONENT) {
+        node = initComponent(vcomponent)
     }
     return node
 }
@@ -29,23 +38,20 @@ export function initText(text) {
     return document.createTextNode(text)
 }
 
-export function initElement(vnode) {
-    const { type, props } = vnode
-    const { children } = props
+export function initElement(vcomponent) {
+    const { type, props } = vcomponent
+    let vchildren = getChildrenFromVcomponent(vcomponent)
     let node = document.createElement(type)
     setProps(node, props)
-    if (Array.isArray(children)) {
-        children.forEach(childVnode => {
-            DOM.appendChildren(node, initVnode(childVnode))
-        })
-    } else {
-        DOM.appendChildren(node, initText(children))
-    }
+    vchildren.forEach(childVnode => {
+        DOM.appendChildren(node, initVnode(childVnode))
+    })
+
     return node
 }
 
-export function initComponent(vComponent) {
-    const { type: Component, props, uid } = vComponent
+export function initComponent(vcomponent) {
+    const { type: Component, props, uid } = vcomponent
     const component = new Component(props)
     const { $cache: cache } = component
     const vnode = renderComponent(component)
@@ -87,7 +93,7 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
 export function updateVnode(oldVnode, newVnode, node) {
     const { type } = oldVnode
     if (!type) {
-        if(oldVnode !== newVnode){
+        if (oldVnode !== newVnode) {
             node.data = newVnode
         }
         return node
@@ -117,7 +123,7 @@ export function updateElement(oldVnode, newVnode, node) {
 }
 
 export function updateChildren(oldVnode, newVnode, node) {
-    let { diff, newChildren,children } = diffList(oldVnode, newVnode)
+    let { diff, newChildren, children } = diffList(oldVnode, newVnode)
     patchChildren(node, diff)
     let childNodes = node.childNodes
     for (let i = 0; i < children.length; i++) {
