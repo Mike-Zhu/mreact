@@ -50,11 +50,11 @@ export default function createElement(type, config, children) {
     }
 
     let finalChildren = children
-    let childrenLength = arguments.length - 2
-    if (childrenLength > 1) {
+    let arguLength = arguments.length
+    if (arguLength > 3) {
         finalChildren = []
-        for (let i = 0; i < childrenLength; i++) {
-            finalChildren.push(arguments[i + 2])
+        for (let i = 2; i < arguLength; i++) {
+            finalChildren.push(arguments[i])
         }
     }
     if (finalChildren) {

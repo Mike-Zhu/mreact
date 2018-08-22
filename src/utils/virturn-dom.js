@@ -1,19 +1,25 @@
 import * as DOM from './DOM'
 import { getUid } from './utils'
-import { diffList, patchChildren } from './list-diff'
+import { diffList } from './list-diff'
 import {
     VTEXT,
     VELEMENT,
     VSTATELESS,
     VCOMPONENT,
-    getChildrenFromVcomponent
+    getChildrenFromVcomponent,
+    MOVES_ADD,
+    MOVES_DELETE,
+    MOVES_REORDER,
+    isString
 } from './utils'
 
-export function createVcomponent({ vtype, type, props }) {
+export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
         type,
         props,
-        vtype
+        vtype,
+        key,
+        ref
     }
     if (vtype === VCOMPONENT) {
         vcomponent.uid = getUid()
@@ -124,11 +130,19 @@ export function updateElement(oldVnode, newVnode, node) {
 
 export function updateChildren(oldVnode, newVnode, node) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
-    patchChildren(node, diff)
     let childNodes = node.childNodes
+    let j = 0
     for (let i = 0; i < children.length; i++) {
-        compareTwoVnodes(children[i], newChildren[i], childNodes[i])
+        if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除
+            compareTwoVnodes(children[i], newChildren[i], childNodes[i - j])
+            if (newChildren[i] === null) {
+                //如果newChildren[i] 是null，说明不带key并且已经被删除了，nodes需要向前瞬移一位
+                j++
+            }
+
+        }
     }
+    patchChildren(node, diff)
 }
 
 export function getDiffProps(props, newProps) {
@@ -163,5 +177,32 @@ export function setProps(node, props) {
             continue
         }
         node.setAttribute(name, props[name])
+    }
+}
+
+export function patchChildren(node, diff) {
+    let childNodes = node.childNodes
+    if (diff.length > 0) {
+        diff.forEach(function (singleDiff) {
+            switch (singleDiff.type) {
+                //delete
+                case MOVES_DELETE:
+                    node.removeChild(childNodes[singleDiff.index])
+                    break
+                //add
+                case MOVES_ADD:
+                    var newNode = isString(singleDiff.item) ? singleDiff.item : initVnode(singleDiff.item)
+                    if (childNodes.length > singleDiff.index) {
+                        node.insertBefore(newNode, childNodes[singleDiff.index])
+                    } else {
+                        node.appendChild(newNode)
+                    }
+                    break
+                //move
+                case MOVES_REORDER:
+                    node.insertBefore(childNodes[singleDiff.oldIndex], childNodes[singleDiff.newIndex])
+                    break
+            }
+        })
     }
 }

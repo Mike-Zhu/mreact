@@ -1,19 +1,15 @@
-export const MOVES_ADD = 1
-export const MOVES_DELETE = 0
-export const MOVES_REORDER = 2
+import {
+    MOVES_ADD,
+    MOVES_DELETE,
+    MOVES_REORDER,
+} from './utils'
 
 export function diffList(oldVnode, newVnode) {
     let oldList = oldVnode.props.children,
         newList = newVnode.props.children
-    // if(!Array.isArray(oldList)){
-    //     return 
-    // }
-    oldList = Array.isArray(oldList) && oldList? oldList : [oldList]
+
+    oldList = Array.isArray(oldList) && oldList ? oldList : [oldList]
     newList = Array.isArray(newList) && newList ? newList : [newList]
-    
-    if(!Array.isArray(oldList)){
-        oldList = [oldList]
-    }
     const oldMap = makeKeyIndexAndFree(oldList),
         newMap = makeKeyIndexAndFree(newList)
 
@@ -27,11 +23,11 @@ export function diffList(oldVnode, newVnode) {
     oldList.forEach(item => {
         const itemKey = getItemKey(item)
         if (itemKey) {
-            const newKey = newKeyList.indexOf(itemKey)
+            const newIndex = newKeyList.indexOf(itemKey)
             children.push(
                 newIndex >= 0
                     ? newList[newIndex]
-                    : null
+                    : 'listNull'
             )
         } else {
             children.push(newFreeList.shift() || null)
@@ -94,13 +90,11 @@ export function diffList(oldVnode, newVnode) {
     return {
         diff: diffList,
         newChildren: children,
-        children:oldList
+        children: oldList
     }
 }
 
-export function patchChildren(node, diff) {
 
-}
 function makeKeyIndexAndFree(list) {
     let keyIndex = [],
         free = []
@@ -125,5 +119,5 @@ function makeKeyIndexAndFree(list) {
     }
 }
 function getItemKey(item) {
-    return item.key || (item.prop && item.prop.key)
+    return item.key
 }

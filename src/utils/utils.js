@@ -9,6 +9,17 @@ export const VELEMENT = 2
 export const VSTATELESS = 3
 export const VCOMPONENT = 4
 
+export const MOVES_ADD = 'add'
+export const MOVES_DELETE = 'delete'
+export const MOVES_REORDER = 'reorder'
+
+export function isString(item) {
+    return type(item) === 'String'
+}
+
+export function type(obj) {
+    return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '')
+}
 
 export function getChildrenFromVcomponent(vcomponent) {
     let { children } = vcomponent.props

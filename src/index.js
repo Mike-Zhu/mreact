@@ -7,14 +7,16 @@ class App extends Component {
       first: 1,
       color: {
         color: "red"
-      }
-    } 
+      },
+      ullist: ['a', 'b', 'c', 'd']
+    }
     let first = 1
     setTimeout(() => {
       this.setState({
         first: ++first,
+        ullist: ['g', 'd', 'e', 'a', 'c', 'f']
       })
-    }, 200)
+    }, 2000)
   }
   // compomentDidMount() {
   //   setTimeout(() => {
@@ -29,6 +31,11 @@ class App extends Component {
       <div>
         {this.state.first}
         <span>
+          <ul>
+            {this.state.ullist.map(res =>
+              <li key={res}>{res}</li>
+            )}
+          </ul>
           <h1 style={this.state.color} >Heading 1</h1>
           <SmallHeader />
           <h2 >Heading 2 {this.state.first}</h2>
