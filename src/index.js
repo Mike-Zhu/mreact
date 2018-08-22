@@ -78,6 +78,7 @@ class App extends Component {
           </ul>
           <h1 style={this.state.color} >Heading 1</h1>
           <SmallHeader />
+          <Allow ppp={this.state.first} />
           <h2 >Heading 2 {this.state.first}</h2>
           <div>
             <h1>{this.state.first}</h1>
@@ -89,6 +90,10 @@ class App extends Component {
       </div>
     )
   }
+}
+
+function Allow({ ppp }) {
+  return <div>{ppp} + !!!!</div>
 }
 
 class SmallHeader extends Component {

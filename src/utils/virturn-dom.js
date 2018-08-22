@@ -36,6 +36,8 @@ export function initVnode(vcomponent) {
         node = initElement(vcomponent)
     } else if (vtype === VCOMPONENT) {
         node = initComponent(vcomponent)
+    } else if (vtype === VSTATELESS) {
+        node = initStateless(vcomponent)
     }
     return node
 }
@@ -70,12 +72,35 @@ export function initComponent(vcomponent) {
     return node
 }
 
+export function initStateless(vcomponent) {
+    const { uid } = vcomponent
+    const vnode = getStateless(vcomponent)
+    const node = initVnode(vnode)
+    node.cache = node.cache || {}
+    node.cache[uid] = vnode
+    return node
+}
+
+export function getStateless(vcomponent) {
+    const { type: factory, props, uid } = vcomponent
+    let vnode = factory(props)
+    if (vnode && vnode.render) {
+        vnode = vnode.render()
+    }
+    return vnode
+}
+
 export function renderComponent(component) {
     return component.render()
 }
 
-export function destroyVnode(oldVnode, node) {
+export function destroyVnode(vcomponent, node) {
+    const { vtype } = vcomponent
+    if (vtype === VELEMENT) {
 
+    } else if (vtype === VCOMPONENT) {
+
+    }
 }
 
 export function compareTwoVnodes(oldVnode, newVnode, node) {
@@ -97,18 +122,22 @@ export function compareTwoVnodes(oldVnode, newVnode, node) {
 }
 
 export function updateVnode(oldVnode, newVnode, node) {
-    const { type } = oldVnode
+    const { vtype, type } = oldVnode
     if (!type) {
         if (oldVnode !== newVnode) {
             node.data = newVnode
         }
         return node
     }
-    if (typeof type === 'function') {
+
+    if (vtype === VCOMPONENT) {
         return updateVcomponent(oldVnode, newVnode, node)
     }
+    if (vtype === VSTATELESS) {
+        return updateStateless(oldVnode, newVnode, node)
+    }
 
-    if (typeof type === 'string') {
+    if (vtype === VELEMENT) {
         return updateElement(oldVnode, newVnode, node)
     }
 }
@@ -122,10 +151,22 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     return cache.node
 }
 
+export function updateStateless(vcomponent, newVcomponent, node) {
+    let uid = vcomponent.uid
+    let vnode = node.cache[uid]
+    delete node.cache[uid]
+    let newVnode = getStateless(newVcomponent)
+    let newNode = compareTwoVnodes(vnode, newVnode, node)
+    newNode.cache = newNode.cache || {}
+    newNode.cache[uid] = newVnode
+    return newVnode
+}
+
 export function updateElement(oldVnode, newVnode, node) {
     let diffProps = getDiffProps(oldVnode.props, newVnode.props)
     diffProps && setProps(node, diffProps)
     updateChildren(oldVnode, newVnode, node)
+    return node
 }
 
 export function updateChildren(oldVnode, newVnode, node) {
