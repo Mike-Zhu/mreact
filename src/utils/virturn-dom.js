@@ -12,6 +12,7 @@ import {
     MOVES_REORDER,
     isString
 } from './utils'
+import { eventList, setEvent } from './event-system'
 
 export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
@@ -61,9 +62,15 @@ export function initElement(vcomponent) {
 export function initComponent(vcomponent) {
     const { type: Component, props, uid } = vcomponent
     const component = new Component(props)
+    if (component.componentWillMount) {
+        component.componentWillMount()
+    }
     const { $cache: cache } = component
     const vnode = renderComponent(component)
     const node = initVnode(vnode)
+    if (component.componentDidMount) {
+        component.componentDidMount()
+    }
     node.cache = node.cache || {}
     node.cache[uid] = component
     cache.vnode = vnode
@@ -82,7 +89,7 @@ export function initStateless(vcomponent) {
 }
 
 export function getStateless(vcomponent) {
-    const { type: factory, props, uid } = vcomponent
+    const { type: factory, props } = vcomponent
     let vnode = factory(props)
     if (vnode && vnode.render) {
         vnode = vnode.render()
@@ -215,6 +222,11 @@ export function setProps(node, props) {
             for (let sKey in styleObject) {
                 node.style[sKey] = styleObject[sKey]
             }
+            continue
+        } else if (eventList.indexOf(name) >= 0) {
+            setEvent(node, name, props[name])
+            continue
+        } else if (typeof props[name] === "function") {
             continue
         }
         node.setAttribute(name, props[name])

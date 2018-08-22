@@ -46,7 +46,6 @@ class Component {
     forceUpdate() {
         let { $updater, $cache, props, context } = this
         this.state = $updater.getState()
-        let state = this.state
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
         return compareTwoVnodes(vnode, newVnode, node)
