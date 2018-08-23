@@ -223,27 +223,25 @@ export function setProps(node, props) {
 
 export function patchChildren(node, diff) {
     let childNodes = node.childNodes
-    if (diff.length > 0) {
-        diff.forEach(function (singleDiff) {
-            switch (singleDiff.type) {
-                //delete
-                case MOVES_DELETE:
-                    node.removeChild(childNodes[singleDiff.index])
-                    break
-                //add
-                case MOVES_ADD:
-                    var newNode = isString(singleDiff.item) ? singleDiff.item : initVnode(singleDiff.item)
-                    if (childNodes.length > singleDiff.index) {
-                        node.insertBefore(newNode, childNodes[singleDiff.index])
-                    } else {
-                        node.appendChild(newNode)
-                    }
-                    break
-                //move
-                case MOVES_REORDER:
-                    node.insertBefore(childNodes[singleDiff.oldIndex], childNodes[singleDiff.newIndex])
-                    break
-            }
-        })
-    }
+    diff.length > 0 && diff.forEach(function (singleDiff) {
+        switch (singleDiff.type) {
+            //delete
+            case MOVES_DELETE:
+                node.removeChild(childNodes[singleDiff.index])
+                break
+            //add
+            case MOVES_ADD:
+                var newNode = isString(singleDiff.item) ? singleDiff.item : initVnode(singleDiff.item)
+                if (childNodes.length > singleDiff.index) {
+                    node.insertBefore(newNode, childNodes[singleDiff.index])
+                } else {
+                    node.appendChild(newNode)
+                }
+                break
+            //move
+            case MOVES_REORDER:
+                node.insertBefore(childNodes[singleDiff.oldIndex], childNodes[singleDiff.newIndex])
+                break
+        }
+    })
 }
