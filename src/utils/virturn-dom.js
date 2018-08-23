@@ -12,7 +12,7 @@ import {
     MOVES_REORDER,
     isString
 } from './utils'
-import { eventList, setEvent } from './event-system'
+import { eventList, addEvent } from './event-system'
 
 export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
@@ -224,7 +224,7 @@ export function setProps(node, props) {
             }
             continue
         } else if (eventList.indexOf(name) >= 0) {
-            setEvent(node, name, props[name])
+            addEvent(node, name, props[name])
             continue
         } else if (typeof props[name] === "function") {
             continue

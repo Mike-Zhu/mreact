@@ -70,7 +70,19 @@ export default class App extends Component {
     }
 
     alert = () => {
+        console.log(this)
         console.log(1)
+    }
+    cons(event, key) {
+        console.log('target')
+        console.log(event.target)
+        console.log("res.key => ", key)
+    }
+    testChange = (event, str) => {
+        console.log(event.target.value)
+        this.setState({
+            inputValue: event.target.value
+        })
     }
     render() {
         return (
@@ -79,11 +91,13 @@ export default class App extends Component {
                 <span>
                     <ul>
                         {this.state.ullist.map(res =>
-                            <li key={res.key}>{res.value}</li>
+                            <li key={res.key}
+                                onClick={event => this.cons(event, res.key)}
+                            >{res.value}</li>
                         )}
                     </ul>
-                    <h1
-                        style={this.state.color}
+                    <input onChange={event => this.testChange(event, 'str')} value={this.state.inputValue} />
+                    <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>
                     <SmallHeader />
