@@ -2,7 +2,7 @@ import { renderComponent, compareTwoVnodes } from './virturn-dom'
 
 const ReactComponentSymbol = {}
 
-export let updater = {
+export let updateQueue = {
     isPending:false,
 }
 class Updater {
