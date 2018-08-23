@@ -7,7 +7,6 @@ import {
 export function diffList(oldVnode, newVnode) {
     let oldList = oldVnode.props.children,
         newList = newVnode.props.children
-
     oldList = Array.isArray(oldList) && oldList ? oldList : [oldList]
     newList = Array.isArray(newList) && newList ? newList : [newList]
     const oldMap = makeKeyIndexAndFree(oldList),

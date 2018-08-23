@@ -2,6 +2,9 @@ import { renderComponent, compareTwoVnodes } from './virturn-dom'
 
 const ReactComponentSymbol = {}
 
+export let updater = {
+    isPending:false,
+}
 class Updater {
     constructor(instance) {
         this.instance = instance
@@ -48,6 +51,7 @@ class Component {
         this.state = $updater.getState()
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
+        $cache.vnode = newVnode
         return compareTwoVnodes(vnode, newVnode, node)
     }
 

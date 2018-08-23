@@ -7,6 +7,7 @@ export default class App extends Component {
         super(props)
         this.state = {
             first: 1,
+            inputValue:0,
             color: {
                 color: "red"
             },
@@ -96,7 +97,9 @@ export default class App extends Component {
                             >{res.value}</li>
                         )}
                     </ul>
-                    <input onChange={event => this.testChange(event, 'str')} value={this.state.inputValue} />
+                    <input
+                        onChange={event => this.testChange(event, 'str')}
+                        value={this.state.inputValue} />
                     <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>

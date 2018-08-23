@@ -57,9 +57,9 @@ export default function createElement(type, config, children) {
             finalChildren.push(arguments[i])
         }
     }
-    if (finalChildren) {
-        finalProps.children = finalChildren
-    }
+    // if (finalChildren) {
+        finalProps.children = finalChildren || []
+    // }
     return createVcomponent({
         type,
         vtype,
