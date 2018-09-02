@@ -65,17 +65,21 @@ export function initComponent(vcomponent) {
     if (component.componentWillMount) {
         component.componentWillMount()
     }
-    const { $cache: cache } = component
+    const { $cache: cache, $updater: updater } = component
     const vnode = renderComponent(component)
     const node = initVnode(vnode)
-    if (component.componentDidMount) {
-        component.componentDidMount()
-    }
     node.cache = node.cache || {}
     node.cache[uid] = component
     cache.vnode = vnode
     cache.node = node
     cache.isMounted = true
+    updater.isPending = true
+    if (component.componentDidMount) {
+        component.componentDidMount()
+    }
+    updater.isPending = false
+    updater.emitUpdate()
+
     return node
 }
 

@@ -7,15 +7,14 @@ export default class SmallHeader extends Component {
         this.state = {
             aaa: 1
         }
-        let aaa = 1
-
+        // let aaa = 1
     }
     compomentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                aaa: ++aaa
-            })
-        }, 300)
+        // setTimeout(() => {
+        //     this.setState({
+        //         aaa: ++aaa
+        //     })
+        // }, 300)
     }
     render() {
         return (

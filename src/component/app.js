@@ -7,7 +7,7 @@ export default class App extends Component {
         super(props)
         this.state = {
             first: 1,
-            inputValue:0,
+            inputValue: '',
             color: {
                 color: "red"
             },
@@ -31,43 +31,40 @@ export default class App extends Component {
             ]
         }
         let first = 1
-        setTimeout(() => {
-            this.setState({
-                first: ++first,
-                ullist: [{
-                    key: "g",
-                    value: "g++"
-                },
-                {
-                    key: "d",
-                    value: "d++bianhua"
-                },
-                {
-                    key: "e",
-                    value: "e++"
-                },
-                {
-                    key: "a",
-                    value: "a++"
-                },
-                {
-                    key: "c",
-                    value: "a++本来是c"
-                },
-                {
-                    key: "f",
-                    value: "f++"
-                }]
-            })
-        }, 2000)
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                first: 2
-            })
-        }, 1000)
+        this.setState({
+            first: 2
+        })
+        this.setState({
+            first: ++this.state.first,
+            ullist: [{
+                key: "g",
+                value: "g++"
+            },
+            {
+                key: "d",
+                value: "d++bianhua"
+            },
+            {
+                key: "e",
+                value: "e++"
+            },
+            {
+                key: "a",
+                value: "a++"
+            },
+            {
+                key: "c",
+                value: "a++本来是c"
+            },
+            {
+                key: "f",
+                value: "f++"
+            }]
+        })
+
     }
 
     alert = () => {
@@ -103,7 +100,7 @@ export default class App extends Component {
                     <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>
-                    <SmallHeader />
+                    {/* <SmallHeader /> */}
                     <Allow ppp={this.state.first} />
                     <h2 >Heading 2 {this.state.first}</h2>
                     <div>

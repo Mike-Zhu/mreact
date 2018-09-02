@@ -3,19 +3,22 @@ import { renderComponent, compareTwoVnodes } from './virturn-dom'
 const ReactComponentSymbol = {}
 
 export let updateQueue = {
-    isPending:false,
+    isPending: false,
 }
 class Updater {
     constructor(instance) {
         this.instance = instance
         this.pendingStates = []
+        this.isPending = false
     }
 
     addState(nextState) {
         this.pendingStates.push(nextState)
+        this.emitUpdate()
     }
     emitUpdate() {
-        this.updateComponent()
+        !this.isPending ?
+            this.updateComponent() : ""
     }
     getState() {
         const { instance } = this
@@ -48,6 +51,7 @@ class Component {
 
     forceUpdate() {
         let { $updater, $cache, props, context } = this
+        console.log(this)
         this.state = $updater.getState()
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
@@ -55,18 +59,18 @@ class Component {
         return compareTwoVnodes(vnode, newVnode, node)
     }
 
-    mountComponent() {
-        if (this._currentVnode) {
-            return _Vnode
-        }
-        const _Vnode = this.getVnode()
-        _Vnode.__instanseReactComponent = this
-        this._currentVnode = _Vnode
-        return _Vnode
-    }
+    // mountComponent() {
+    //     console.log(this)
+    //     if (this._currentVnode) {
+    //         return _Vnode
+    //     }
+    //     const _Vnode = this.getVnode()
+    //     _Vnode.__instanseReactComponent = this
+    //     this._currentVnode = _Vnode
+    //     return _Vnode
+    // }
     setState(partialState) {
         this.$updater.addState(partialState)
-        this.forceUpdate()
     }
 }
 
