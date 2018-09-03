@@ -1,6 +1,6 @@
 # 文件夹
 /node_modules/
-/dist/
+./dist/
 
 # 某个文件
 /bundle.js
