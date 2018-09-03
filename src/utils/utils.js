@@ -13,6 +13,10 @@ export const MOVES_ADD = 'add'
 export const MOVES_DELETE = 'delete'
 export const MOVES_REORDER = 'reorder'
 
+export const ELEMENT_NODE_TYPE = 1
+export const DOC_NODE_TYPE = 9
+export const DOCUMENT_FRAGMENT_NODE_TYPE = 11
+
 export function isString(item) {
     return type(item) === 'String'
 }

@@ -4,7 +4,15 @@ const ReactComponentSymbol = {}
 
 export let updateQueue = {
     isPending: false,
+    updaters: [],
+    add: (updater) => {
+        this.updaters.push(updater)
+    },
+    batchUpdate:() => {
+        
+    }
 }
+
 class Updater {
     constructor(instance) {
         this.instance = instance
@@ -59,22 +67,8 @@ class Component {
         return compareTwoVnodes(vnode, newVnode, node)
     }
 
-    // mountComponent() {
-    //     console.log(this)
-    //     if (this._currentVnode) {
-    //         return _Vnode
-    //     }
-    //     const _Vnode = this.getVnode()
-    //     _Vnode.__instanseReactComponent = this
-    //     this._currentVnode = _Vnode
-    //     return _Vnode
-    // }
     setState(partialState) {
         this.$updater.addState(partialState)
     }
-}
-
-function shouldUpdateComponent(prevElement, nextElement) {
-    return prevElement.type === nextElement.type
 }
 export default Component
