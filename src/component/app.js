@@ -34,42 +34,49 @@ export default class App extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            first: 2
-        })
-        this.setState({
-            first: ++this.state.first,
-            ullist: [{
-                key: "g",
-                value: "g++"
-            },
-            {
-                key: "d",
-                value: "d++bianhua"
-            },
-            {
-                key: "e",
-                value: "e++"
-            },
-            {
-                key: "a",
-                value: "a++"
-            },
-            {
-                key: "c",
-                value: "a++本来是c"
-            },
-            {
-                key: "f",
-                value: "f++"
-            }]
-        })
+        // this.setState({
+        //     first: 2
+        // })
+        // this.setState({
+        //     first: ++this.state.first,
+        //     ullist: [{
+        //         key: "g",
+        //         value: "g++"
+        //     },
+        //     {
+        //         key: "d",
+        //         value: "d++bianhua"
+        //     },
+        //     {
+        //         key: "e",
+        //         value: "e++"
+        //     },
+        //     {
+        //         key: "a",
+        //         value: "a++"
+        //     },
+        //     {
+        //         key: "c",
+        //         value: "a++本来是c"
+        //     },
+        //     {
+        //         key: "f",
+        //         value: "f++"
+        //     }]
+        // })
 
     }
 
     alert = () => {
-        console.log(this)
-        console.log(1)
+        this.setState({
+            first:this.state.first + 1
+        })
+        this.setState({
+            first:this.state.first + 2
+        })
+        this.setState({
+            first:this.state.first + 3
+        })
     }
     cons(event, key) {
         console.log('target')

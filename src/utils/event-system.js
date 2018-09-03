@@ -1,7 +1,4 @@
-export const eventList = [
-    'onClick',
-    'onChange',
-]
+import { updateQueue } from './Component'
 // event config
 export const unbubbleEvents = {
     /**
@@ -87,6 +84,7 @@ export function addEvent(node, eventName, eventContent) {
 function dispatchEvent(event) {
     let { type, target } = event
     let eventName = 'on' + type
+    updateQueue.isPending = true
     while (target) {
         let eventType = target.eventType || (target.eventType = {})
         let listener = eventType[eventName]
@@ -97,6 +95,8 @@ function dispatchEvent(event) {
         listener.call(target, event)
         target = target.parentNode
     }
+    updateQueue.isPending = false
+    updateQueue.batchUpdate()
 }
 
 function isSupportChange(target) {

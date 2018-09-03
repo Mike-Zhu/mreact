@@ -73,13 +73,9 @@ export function initComponent(vcomponent) {
     cache.vnode = vnode
     cache.node = node
     cache.isMounted = true
-    updater.isPending = true
     if (component.componentDidMount) {
         component.componentDidMount()
     }
-    updater.isPending = false
-    updater.emitUpdate()
-
     return node
 }
 
@@ -158,6 +154,7 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let component = node.cache[uid]
     let { $updater: updater, $cache: cache } = component
     node.cache[newVcomponent.uid] = component
+    console.log(1)
     component.forceUpdate()
     return cache.node
 }
@@ -227,7 +224,7 @@ export function setProps(node, props) {
                 node.style[sKey] = styleObject[sKey]
             }
             continue
-        } else if (eventList.indexOf(name) >= 0) {
+        } else if (name.startsWith('on') >= 0) {
             addEvent(node, name, props[name])
             continue
         } else if (typeof props[name] === "function") {

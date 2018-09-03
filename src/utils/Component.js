@@ -5,11 +5,21 @@ const ReactComponentSymbol = {}
 export let updateQueue = {
     isPending: false,
     updaters: [],
-    add: (updater) => {
-        this.updaters.push(updater)
+    add: function (updater){
+        if (this.updaters.indexOf(updater) < 0) {
+            this.updaters.push(updater)
+        }
     },
-    batchUpdate:() => {
-        
+    batchUpdate: function () {
+        if (this.isPending) {
+            return
+        }
+        this.isPending = true
+        let updater
+        while (updater = this.updaters.shift()) {
+            updater.updateComponent()
+        }
+        this.isPending = false
     }
 }
 
@@ -22,11 +32,13 @@ class Updater {
 
     addState(nextState) {
         this.pendingStates.push(nextState)
+        console.log(nextState)
         this.emitUpdate()
     }
     emitUpdate() {
-        !this.isPending ?
-            this.updateComponent() : ""
+        updateQueue.isPending
+            ? updateQueue.add(this)
+            : this.updateComponent()
     }
     getState() {
         const { instance } = this
@@ -60,6 +72,7 @@ class Component {
     forceUpdate() {
         let { $updater, $cache, props, context } = this
         console.log(this)
+        console.log($updater.isPending)
         this.state = $updater.getState()
         let { vnode, node } = $cache
         let newVnode = renderComponent(this)
