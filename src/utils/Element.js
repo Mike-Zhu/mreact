@@ -57,8 +57,13 @@ export default function createElement(type, config, children) {
             finalChildren.push(arguments[i])
         }
     }
+    finalChildren = finalChildren || []
     // if (finalChildren) {
-        finalProps.children = finalChildren || []
+    //这里返回的false不需要了
+    finalProps.children = Array.isArray(finalChildren)
+        ? finalChildren.filter(res => res)
+        : finalChildren
+
     // }
     return createVcomponent({
         type,

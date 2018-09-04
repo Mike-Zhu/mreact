@@ -178,7 +178,6 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
 }
 
 export function updateStateless(vcomponent, newVcomponent, node) {
-    console.log(vcomponent, newVcomponent, node)
     let uid = vcomponent.uid
     let vnode = node.cache[uid]
     delete node.cache[uid]
@@ -198,7 +197,8 @@ export function updateElement(oldVnode, newVnode, node) {
 
 export function updateChildren(oldVnode, newVnode, node) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
-    let childNodes = node.childNodes
+    let childNodes = node ? node.childNodes :[]
+  
     let j = 0
     for (let i = 0; i < children.length; i++) {
         if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除

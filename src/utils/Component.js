@@ -103,7 +103,6 @@ class Component {
             updater.addState(state)
             return
         }
-        debugger
         updater.isPending = true
         let { vnode, node } = $cache
         let nextState = $cache.state || state

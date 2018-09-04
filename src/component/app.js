@@ -76,8 +76,7 @@ export default class App extends Component {
             first: this.state.first + 2
         })
         this.setState({
-            first: this.state.first + 3,
-            isTest: true
+            isTest: !this.state.isTest
         })
     }
     cons(event, key) {
