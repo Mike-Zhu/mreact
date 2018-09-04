@@ -9,9 +9,9 @@ export default class SmallHeader extends Component {
         }
         // let aaa = 1
     }
-    compomentDidMount() {
+    componentDidMount() {
         this.setState({
-            aaa: this.state.aaa++
+            aaa: 2
         })
     }
     render() {

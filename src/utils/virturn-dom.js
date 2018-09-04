@@ -138,15 +138,16 @@ export function updateVnode(oldVnode, newVnode, node) {
     }
 
     if (vtype === VCOMPONENT) {
-        return updateVcomponent(oldVnode, newVnode, node)
+        updateVcomponent(oldVnode, newVnode, node)
     }
     if (vtype === VSTATELESS) {
-        return updateStateless(oldVnode, newVnode, node)
+        updateStateless(oldVnode, newVnode, node)
     }
 
     if (vtype === VELEMENT) {
-        return updateElement(oldVnode, newVnode, node)
+        updateElement(oldVnode, newVnode, node)
     }
+    return node
 }
 
 export function updateVcomponent(vcomponent, newVcomponent, node) {
@@ -154,9 +155,7 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let component = node.cache[uid]
     let { $updater: updater, $cache: cache } = component
     node.cache[newVcomponent.uid] = component
-    console.log(1)
-    component.forceUpdate()
-    return cache.node
+    updater.emitUpdate()
 }
 
 export function updateStateless(vcomponent, newVcomponent, node) {
