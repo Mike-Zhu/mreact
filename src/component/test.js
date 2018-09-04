@@ -10,11 +10,9 @@ export default class SmallHeader extends Component {
         // let aaa = 1
     }
     compomentDidMount() {
-        // setTimeout(() => {
-        //     this.setState({
-        //         aaa: ++aaa
-        //     })
-        // }, 300)
+        this.setState({
+            aaa: this.state.aaa++
+        })
     }
     render() {
         return (

@@ -9,13 +9,14 @@ export default function mount(element, node) {
     if (!DOM.isValidContainer(node)) {
         throw new Error(`container ${node} is not a DOM element`)
     }
+    //render本身作为一次大的batchPengding
+    //所以在整个mount阶段
+    updateQueue.isPending = true
     //element => component
     const renderedNode = initVnode(element)
     DOM.empty(node)
     DOM.appendChildren(node, renderedNode)
-    //render本身作为一次大的batchPengding
-    //所以在整个mount阶段
-    updateQueue.isPending = true
+
     //这里应该是触发所有的component()
     updateQueue.isPending = false
     updateQueue.batchUpdate()
