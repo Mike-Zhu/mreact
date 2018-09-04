@@ -1,4 +1,4 @@
-import { renderComponent, compareTwoVnodes } from './virturn-dom'
+import { renderComponent, compareTwoVnodes, clearPending } from './virturn-dom'
 
 const ReactComponentSymbol = {}
 
@@ -16,7 +16,6 @@ export let updateQueue = {
         }
         this.isPending = true
         let updater
-        console.log(this.updaters.length)
         while (updater = this.updaters.shift()) {
             updater.updateComponent()
         }
@@ -37,7 +36,6 @@ class Updater {
         this.emitUpdate()
     }
     emitUpdate() {
-        console.log(++i)
         updateQueue.isPending
             ? updateQueue.add(this)
             : this.updateComponent()
@@ -80,7 +78,6 @@ function shouldUpdate(component, nextProps, nextState, nextContext, callback) {
     cache.props = nextProps
     cache.state = nextState
     cache.context = nextContext || {}
-    console.log('j => ',++j)
     component.forceUpdate(callback)
 }
 
@@ -106,6 +103,7 @@ class Component {
             updater.addState(state)
             return
         }
+        debugger
         updater.isPending = true
         let { vnode, node } = $cache
         let nextState = $cache.state || state
@@ -120,6 +118,7 @@ class Component {
         let newVnode = renderComponent(this)
         $cache.vnode = newVnode
         compareTwoVnodes(vnode, newVnode, node)
+        clearPending()
         updater.isPending = false
         updater.emitUpdate()
     }

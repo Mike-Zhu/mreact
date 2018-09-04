@@ -13,6 +13,7 @@ import {
     isString
 } from './utils'
 import { eventList, addEvent } from './event-system'
+import { cpus } from 'os';
 
 export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
@@ -59,6 +60,7 @@ export function initElement(vcomponent) {
     return node
 }
 
+const pendingComponents = []
 export function initComponent(vcomponent) {
     const { type: Component, props, uid } = vcomponent
     const component = new Component(props)
@@ -73,12 +75,29 @@ export function initComponent(vcomponent) {
     cache.vnode = vnode
     cache.node = node
     cache.isMounted = true
-    if (component.componentDidMount) {
-        component.componentDidMount()
-    }
+    pendingComponents.push(component)
     return node
 }
 
+function clearPendingComponents() {
+    let len = pendingComponents.length
+    if (!len) {
+        return
+    }
+    let compoenent
+    while (compoenent = pendingComponents.shift()) {
+        let updater = compoenent.$updater
+        if (compoenent.componentDidMount) {
+            compoenent.componentDidMount()
+        }
+        updater.isPending = false
+        updater.emitUpdate()
+    }
+}
+
+export function clearPending() {
+    clearPendingComponents()
+}
 export function initStateless(vcomponent) {
     const { uid } = vcomponent
     const vnode = getStateless(vcomponent)
@@ -159,6 +178,7 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
 }
 
 export function updateStateless(vcomponent, newVcomponent, node) {
+    console.log(vcomponent, newVcomponent, node)
     let uid = vcomponent.uid
     let vnode = node.cache[uid]
     delete node.cache[uid]

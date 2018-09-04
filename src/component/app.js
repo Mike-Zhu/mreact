@@ -6,6 +6,7 @@ export default class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            isTest: false,
             first: 1,
             inputValue: '',
             color: {
@@ -37,45 +38,46 @@ export default class App extends Component {
         this.setState({
             first: 2
         })
-        this.setState({
-            first: ++this.state.first,
-            ullist: [{
-                key: "g",
-                value: "g++"
-            },
-            {
-                key: "d",
-                value: "d++bianhua"
-            },
-            {
-                key: "e",
-                value: "e++"
-            },
-            {
-                key: "a",
-                value: "a++"
-            },
-            {
-                key: "c",
-                value: "a++本来是c"
-            },
-            {
-                key: "f",
-                value: "f++"
-            }]
-        })
+        // this.setState({
+        //     first: ++this.state.first,
+        //     ullist: [{
+        //         key: "g",
+        //         value: "g++"
+        //     },
+        //     {
+        //         key: "d",
+        //         value: "d++bianhua"
+        //     },
+        //     {
+        //         key: "e",
+        //         value: "e++"
+        //     },
+        //     {
+        //         key: "a",
+        //         value: "a++"
+        //     },
+        //     {
+        //         key: "c",
+        //         value: "a++本来是c"
+        //     },
+        //     {
+        //         key: "f",
+        //         value: "f++"
+        //     }]
+        // })
 
     }
 
     alert = () => {
         this.setState({
-            first:this.state.first + 1
+            first: this.state.first + 1
         })
         this.setState({
-            first:this.state.first + 2
+            first: this.state.first + 2
         })
         this.setState({
-            first:this.state.first + 3
+            first: this.state.first + 3,
+            isTest: true
         })
     }
     cons(event, key) {
@@ -107,7 +109,7 @@ export default class App extends Component {
                     <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>
-                    <SmallHeader />
+                    {this.state.isTest && <SmallHeader />}
                     <Allow ppp={this.state.first} />
                     <h2 >Heading 2 {this.state.first}</h2>
                     <div>
