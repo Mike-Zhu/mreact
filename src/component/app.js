@@ -38,33 +38,33 @@ export default class App extends Component {
         this.setState({
             first: 2
         })
-        // this.setState({
-        //     first: ++this.state.first,
-        //     ullist: [{
-        //         key: "g",
-        //         value: "g++"
-        //     },
-        //     {
-        //         key: "d",
-        //         value: "d++bianhua"
-        //     },
-        //     {
-        //         key: "e",
-        //         value: "e++"
-        //     },
-        //     {
-        //         key: "a",
-        //         value: "a++"
-        //     },
-        //     {
-        //         key: "c",
-        //         value: "a++本来是c"
-        //     },
-        //     {
-        //         key: "f",
-        //         value: "f++"
-        //     }]
-        // })
+        this.setState({
+            first: ++this.state.first,
+            ullist: [{
+                key: "g",
+                value: "g++"
+            },
+            {
+                key: "d",
+                value: "d++bianhua"
+            },
+            {
+                key: "e",
+                value: "e++"
+            },
+            {
+                key: "a",
+                value: "a++"
+            },
+            {
+                key: "c",
+                value: "a++本来是c"
+            },
+            {
+                key: "f",
+                value: "f++"
+            }]
+        })
 
     }
 
@@ -76,7 +76,8 @@ export default class App extends Component {
             first: this.state.first + 2
         })
         this.setState({
-            isTest: !this.state.isTest
+            first: this.state.first + 3,
+            isTest: true
         })
     }
     cons(event, key) {
@@ -93,7 +94,7 @@ export default class App extends Component {
     render() {
         return (
             <div>
-                {this.state.first}
+                {'this.state.first =>' + this.state.first}
                 <span>
                     <ul>
                         {this.state.ullist.map(res =>
@@ -108,7 +109,7 @@ export default class App extends Component {
                     <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>
-                    {this.state.isTest && <SmallHeader />}
+                    <SmallHeader ppp={this.state.first} />
                     <Allow ppp={this.state.first} />
                     <h2 >Heading 2 {this.state.first}</h2>
                     <div>

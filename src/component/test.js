@@ -4,19 +4,15 @@ const { Component } = Mreact
 export default class SmallHeader extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            aaa: 1
-        }
-        // let aaa = 1
+        console.log(this.props.ppp)
     }
     componentDidMount() {
-        this.setState({
-            aaa: 2
-        })
+
     }
     render() {
+        console.log(this.props)
         return (
-            <h5>{this.state.aaa} +++ 这是内部component</h5>
+            <h5>{this.props.ppp} +++ 这是内部component</h5>
         )
     }
 }

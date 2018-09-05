@@ -4,7 +4,8 @@
 
 ### *Todo*
 - life-cycle
-- event-system
-- state-batch
+- ~~event-system~~
+- ~~state-batch~~
 - add [propsChange, context]
 - TEST
+- add refs

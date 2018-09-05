@@ -95,6 +95,25 @@ export function diffList(oldVnode, newVnode) {
 }
 
 
+export function getDiffProps(props, newProps) {
+    let changeProps = {},
+        count = 0,
+        ignoreList = ['children', 'key']
+    for (let name in props) {
+        if (newProps[name] !== props[name] && ignoreList.indexOf(name) < 0) {
+            changeProps[name] = newProps[name]
+            count++
+        }
+    }
+    for (let name in newProps) {
+        if (!props.hasOwnProperty(name) && ignoreList.indexOf(name) < 0) {
+            changeProps[name] = newProps[name]
+            count++
+        }
+    }
+    return count > 0 && changeProps
+}
+
 function makeKeyIndexAndFree(list) {
     let keyIndex = [],
         free = []

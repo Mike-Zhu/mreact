@@ -64,6 +64,7 @@ class Updater {
 }
 
 function shouldUpdate(component, nextProps, nextState, nextContext, callback) {
+    console.log(nextState)
     let shouldComponentUpdate = true
     if (component.shouldComponentUpdate) {
         shouldComponentUpdate = component.shouldComponentUpdate(nextProps, state, nextContext)

@@ -1,6 +1,6 @@
 import * as DOM from './DOM'
 import { getUid } from './utils'
-import { diffList } from './list-diff'
+import { diffList, getDiffProps } from './list-diff'
 import {
     VTEXT,
     VELEMENT,
@@ -12,8 +12,7 @@ import {
     MOVES_REORDER,
     isString
 } from './utils'
-import { eventList, addEvent } from './event-system'
-import { cpus } from 'os';
+import { addEvent } from './event-system'
 
 export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
@@ -197,8 +196,8 @@ export function updateElement(oldVnode, newVnode, node) {
 
 export function updateChildren(oldVnode, newVnode, node) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
-    let childNodes = node ? node.childNodes :[]
-  
+    let childNodes = node ? node.childNodes : []
+
     let j = 0
     for (let i = 0; i < children.length; i++) {
         if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除
@@ -213,24 +212,7 @@ export function updateChildren(oldVnode, newVnode, node) {
     patchChildren(node, diff)
 }
 
-export function getDiffProps(props, newProps) {
-    let changeProps = {},
-        count = 0,
-        ignoreList = ['children', 'key']
-    for (let name in props) {
-        if (newProps[name] !== props[name] && ignoreList.indexOf(name) < 0) {
-            changeProps[name] = newProps[name]
-            count++
-        }
-    }
-    for (let name in newProps) {
-        if (!props.hasOwnProperty(name) && ignoreList.indexOf(name) < 0) {
-            changeProps[name] = newProps[name]
-            count++
-        }
-    }
-    return count > 0 && changeProps
-}
+
 
 export function setProps(node, props) {
     let ignoreList = ['children', 'key']
