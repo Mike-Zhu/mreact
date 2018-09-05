@@ -6,4 +6,5 @@
 - life-cycle
 - event-system
 - state-batch
-
+- add [propsChange, context]
+- TEST
