@@ -173,7 +173,11 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let component = node.cache[uid]
     let { $updater: updater, $cache: cache } = component
     node.cache[newVcomponent.uid] = component
-    updater.emitUpdate()
+
+    let nextProps = newVcomponent.props
+    let nextContext = newVcomponent.context
+
+    updater.emitUpdate(nextProps,nextContext)
 }
 
 export function updateStateless(vcomponent, newVcomponent, node) {

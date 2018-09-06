@@ -32,11 +32,16 @@ class Updater {
 
     addState(nextState) {
         this.pendingStates.push(nextState)
-        console.log(nextState)
-        this.emitUpdate()
+        if (!this.isPending) {
+            this.emitUpdate()
+        }
     }
-    emitUpdate() {
-        updateQueue.isPending
+
+    emitUpdate(nextProps, nextContext) {
+        this.nextProps = nextProps
+        this.nextContext = nextContext
+
+        nextProps || updateQueue.isPending
             ? updateQueue.add(this)
             : this.updateComponent()
     }
