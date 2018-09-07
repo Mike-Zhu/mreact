@@ -1,4 +1,9 @@
-import { renderComponent, compareTwoVnodes, clearPending } from './virturn-dom'
+import {
+    renderComponent,
+    compareTwoVnodes,
+    clearPending,
+    syncCache
+} from './virturn-dom'
 import * as _ from './utils'
 const ReactComponentSymbol = {}
 
@@ -130,6 +135,16 @@ function shouldUpdate(component, nextProps, nextState, nextContext, callback) {
 }
 
 class Component {
+    // getChildContext: _.noop,
+    // componentWillUpdate: _.noop,
+    // componentDidUpdate: _.noop,
+    // componentWillReceiveProps: _.noop,
+    // componentWillMount: _.noop,
+    // componentDidMount: _.noop,
+    // componentWillUnmount: _.noop,
+    // shouldComponentUpdate(nextProps, nextState) {
+    // 	return true
+    //}
     constructor(props) {
         this.$updater = new Updater(this)
         this.$cache = {
@@ -151,20 +166,28 @@ class Component {
             updater.addState(state)
             return
         }
-        updater.isPending = true
+        
         let { vnode, node } = $cache
         let nextState = $cache.state || state
         let nextProps = $cache.props || props
         let nextContext = $cache.context || context
         $cache.props = $cache.state = $cache.context = null
 
+        updater.isPending = true
+        if (this.componentWillUpdate) {
+			this.componentWillUpdate(nextProps, nextState, nextContext)
+		}
         this.state = nextState
         this.props = nextProps
         this.context = nextContext
 
         let newVnode = renderComponent(this)
+        let newNode = compareTwoVnodes(vnode, newVnode, node)
+        if (newNode !== node) {
+            newNode.cache = newNode.cache || {}
+            syncCache(newNode.cache, node.cahce, newNode)
+        }
         $cache.vnode = newVnode
-        compareTwoVnodes(vnode, newVnode, node)
         clearPending()
         if (this.componentDidUpdate) {
             this.componentDidUpdate(props, state, context)
@@ -182,3 +205,4 @@ class Component {
     }
 }
 export default Component
+

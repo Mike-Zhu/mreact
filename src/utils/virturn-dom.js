@@ -263,3 +263,19 @@ export function patchChildren(node, diff) {
         }
     })
 }
+
+export function syncCache(cahce, oldCache, node) {
+    for(let key in oldCache){
+        if(!oldCache.hasOwnProperty(key)){
+            continue
+        }
+        let value = oldCache[key]
+        cache[key] = value
+
+        if(value.forceUpdate){
+            //cache上绑定的东西需要移植
+            //如果value是Componnet，则需要更新node
+            value.$cache.node = node
+        }
+    }
+}
