@@ -21,6 +21,14 @@ export function isString(item) {
     return type(item) === 'String'
 }
 
+export function isFunction(item) {
+    return type(item) === 'Function'
+}
+
+export function isArray(item) {
+    return type(item) === 'Function'
+}
+
 export function type(obj) {
     return Object.prototype.toString.call(obj).replace(/\[object\s|\]/g, '')
 }

@@ -1,5 +1,5 @@
 import { renderComponent, compareTwoVnodes, clearPending } from './virturn-dom'
-
+import * as _ from './utils'
 const ReactComponentSymbol = {}
 
 export let updateQueue = {
@@ -22,19 +22,31 @@ export let updateQueue = {
         this.isPending = false
     }
 }
-let i = 0, j = 0
+
 class Updater {
     constructor(instance) {
         this.instance = instance
         this.pendingStates = []
+        this.pendingCallbacks = []
         this.isPending = false
+        this.nextProps = this.nextContext = null
+        this.clearCallbacks = this.clearCallbacks.bind(this)
     }
 
+
     addState(nextState) {
-        this.pendingStates.push(nextState)
-        if (!this.isPending) {
-            this.emitUpdate()
+        if (nextState) {
+            this.pendingStates.push(nextState)
+            if (!this.isPending) {
+                this.emitUpdate()
+            }
         }
+    }
+
+    replaceState(nextState) {
+        let { pendingStates } = this
+        pendingStates.pop()
+        pendingStates.push([nextState])
     }
 
     emitUpdate(nextProps, nextContext) {
@@ -46,13 +58,43 @@ class Updater {
             : this.updateComponent()
     }
     getState() {
-        const { instance } = this
-        let _pendingState = instance.state
-        while (this.pendingStates.length > 0) {
-            let partialState = this.pendingStates.shift()
-            _pendingState = Object.assign({}, instance.state, partialState)
+        //针对 replace 和 nextState 是回调函数的做了处理
+        const { instance, pendingStates } = this
+        let { state, props } = this
+        if (pendingStates.length === 0) {
+            return state
         }
-        return _pendingState
+        state = Object.assign({}, state)
+        while (pendingStates.length > 0) {
+            let nextState = pendingStates.shift()
+            let isReplace = _.isArray(nextState)
+            if (isReplace) {
+                nextState = nextState[0]
+            }
+            if (_.isFunction(nextState)) {
+                nextState = nextState.call(instance, state, props)
+            }
+            if (isReplace) {
+                state = Object.assign({}, nextState)
+            } else {
+                state = Object.assign(state, nextState)
+            }
+        }
+        return state
+    }
+
+    addCallback(nextCallback) {
+        if (_.isFunction(nextCallback)) {
+            this.pendingCallbacks.push(nextCallback)
+        }
+    }
+
+    clearCallbacks() {
+        let { pendingCallbacks, instance } = this
+        if (pendingCallbacks.length > 0) {
+            this.pendingCallbacks = []
+            pendingCallbacks.forEach(callback => callback.call(instance))
+        }
     }
 
     updateComponent() {
@@ -100,7 +142,7 @@ class Component {
         return ReactComponentSymbol
     }
 
-    forceUpdate() {
+    forceUpdate(callback) {
         let { $updater: updater, $cache, props, context, state } = this
         if (!$cache.isMounted) {
             return
@@ -124,12 +166,19 @@ class Component {
         $cache.vnode = newVnode
         compareTwoVnodes(vnode, newVnode, node)
         clearPending()
+        if (this.componentDidUpdate) {
+            this.componentDidUpdate(props, state, context)
+        }
+        if (callback) {
+            callback.call(this)
+        }
         updater.isPending = false
         updater.emitUpdate()
     }
 
-    setState(partialState) {
+    setState(partialState, callback) {
         this.$updater.addState(partialState)
+        this.$updater.addCallback(callback)
     }
 }
 export default Component
