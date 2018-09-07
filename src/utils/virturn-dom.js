@@ -159,7 +159,7 @@ export function updateVnode(oldVnode, newVnode, node) {
         updateVcomponent(oldVnode, newVnode, node)
     }
     if (vtype === VSTATELESS) {
-        updateStateless(oldVnode, newVnode, node)
+        updateVstateless(oldVnode, newVnode, node)
     }
 
     if (vtype === VELEMENT) {
@@ -177,10 +177,10 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let nextProps = newVcomponent.props
     let nextContext = newVcomponent.context
 
-    updater.emitUpdate(nextProps,nextContext)
+    updater.emitUpdate(nextProps, nextContext)
 }
 
-export function updateStateless(vcomponent, newVcomponent, node) {
+export function updateVstateless(vcomponent, newVcomponent, node) {
     let uid = vcomponent.uid
     let vnode = node.cache[uid]
     delete node.cache[uid]
@@ -188,6 +188,9 @@ export function updateStateless(vcomponent, newVcomponent, node) {
     let newNode = compareTwoVnodes(vnode, newVnode, node)
     newNode.cache = newNode.cache || {}
     newNode.cache[uid] = newVnode
+    if (newNode !== node) {
+        syncCache(newNode.cache, node.cache, newNode)
+    }
     return newVnode
 }
 
@@ -264,15 +267,17 @@ export function patchChildren(node, diff) {
     })
 }
 
-export function syncCache(cahce, oldCache, node) {
-    for(let key in oldCache){
-        if(!oldCache.hasOwnProperty(key)){
+export function syncCache(cache, oldCache, node) {
+    //如果node改变了，node本身的cahce所带数据需要迁移到新的node上
+    //此时如果此node是由component render而来，此时新的node上需要再cache上再次指向此component
+    for (let key in oldCache) {
+        if (!oldCache.hasOwnProperty(key)) {
             continue
         }
         let value = oldCache[key]
         cache[key] = value
 
-        if(value.forceUpdate){
+        if (value.forceUpdate) {
             //cache上绑定的东西需要移植
             //如果value是Componnet，则需要更新node
             value.$cache.node = node
