@@ -174,10 +174,16 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let { $updater: updater, $cache: cache } = component
     node.cache[newVcomponent.uid] = component
 
+    let nextState = newVcomponent.state
     let nextProps = newVcomponent.props
     let nextContext = newVcomponent.context
-
-    updater.emitUpdate(nextProps, nextContext)
+    if(component.componengReceiveProps){
+        let isNotPending = !updater.isPending
+        if(isNotPending) updater.isPending = true
+        component.componengReceiveProps(nextProps,nextState)
+        if(isNotPending) updater.isPending = false
+    }
+    updater.emitUpdate(nextProps,nextContext)
 }
 
 export function updateVstateless(vcomponent, newVcomponent, node) {
