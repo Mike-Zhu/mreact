@@ -64,14 +64,14 @@ class Updater {
     }
     getState() {
         //针对 replace 和 nextState 是回调函数的做了处理
-        const { instance, pendingStates } = this
-        let { state, props } = this
+        let { instance: { state }, props } = this
+        let pendingStates = this.pendingStates
+        this.pendingStates = []
         if (pendingStates.length === 0) {
             return state
         }
         state = Object.assign({}, state)
-        while (pendingStates.length > 0) {
-            let nextState = pendingStates.shift()
+        pendingStates.forEach(nextState => {
             let isReplace = _.isArray(nextState)
             if (isReplace) {
                 nextState = nextState[0]
@@ -84,7 +84,7 @@ class Updater {
             } else {
                 state = Object.assign(state, nextState)
             }
-        }
+        })
         return state
     }
 
@@ -165,7 +165,7 @@ class Component {
             updater.addState(state)
             return
         }
-        
+
         let { vnode, node } = $cache
         let nextState = $cache.state || state
         let nextProps = $cache.props || props
@@ -174,8 +174,8 @@ class Component {
 
         updater.isPending = true
         if (this.componentWillUpdate) {
-			this.componentWillUpdate(nextProps, nextState, nextContext)
-		}
+            this.componentWillUpdate(nextProps, nextState, nextContext)
+        }
         this.state = nextState
         this.props = nextProps
         this.context = nextContext

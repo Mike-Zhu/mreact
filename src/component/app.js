@@ -31,7 +31,6 @@ export default class App extends Component {
                 }
             ]
         }
-        let first = 1
     }
 
     componentDidMount() {
@@ -109,8 +108,6 @@ export default class App extends Component {
                     <h1 style={this.state.color}
                         onClick={this.alert}
                     >Heading 1</h1>
-                    <SmallHeader ppp={this.state.first} />
-                    <Allow ppp={this.state.first} />
                     <h2 >Heading 2 {this.state.first}</h2>
                     <div>
                         <h1>{this.state.first}</h1>
