@@ -48,13 +48,13 @@ export function initText(text) {
     return document.createTextNode(text)
 }
 
-export function initElement(vcomponent) {
+export function initElement(vcomponent, parentContext) {
     const { type, props } = vcomponent
     let vchildren = getChildrenFromVcomponent(vcomponent)
     let node = document.createElement(type)
     setProps(node, props)
     vchildren.forEach(childVnode => {
-        DOM.appendChildren(node, initVnode(childVnode))
+        DOM.appendChildren(node, initVnode(childVnode, parentContext))
     })
 
     return node
@@ -112,16 +112,17 @@ export function clearPending() {
 }
 export function initStateless(vcomponent, parentContext) {
     const { uid } = vcomponent
-    const vnode = getStateless(vcomponent)
+    const vnode = getStateless(vcomponent, parentContext)
     const node = initVnode(vnode, parentContext)
     node.cache = node.cache || {}
     node.cache[uid] = vnode
     return node
 }
 
-export function getStateless(vcomponent) {
+export function getStateless(vcomponent, parentContext) {
     const { type: factory, props } = vcomponent
-    let vnode = factory(props)
+    const context = getContextByTypes(parentContext, factory.contextTypes)
+    let vnode = factory(props, context)
     if (vnode && vnode.render) {
         vnode = vnode.render()
     }
