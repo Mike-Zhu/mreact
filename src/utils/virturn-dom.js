@@ -13,6 +13,7 @@ import {
     isString
 } from './utils'
 import { addEvent } from './event-system'
+import { getContextByTypes, getChildContext } from './context'
 
 export function createVcomponent({ vtype, type, props, key, ref }) {
     let vcomponent = {
@@ -36,7 +37,7 @@ export function initVnode(vcomponent, parentContext) {
     } else if (vtype === VELEMENT) {
         node = initElement(vcomponent, parentContext)
     } else if (vtype === VCOMPONENT) {
-        node = initComponent(vcomponent, parentContext)
+        node = initVcomponent(vcomponent, parentContext)
     } else if (vtype === VSTATELESS) {
         node = initStateless(vcomponent, parentContext)
     }
@@ -60,20 +61,32 @@ export function initElement(vcomponent) {
 }
 
 const pendingComponents = []
-export function initComponent(vcomponent, parentContext) {
+export function initVcomponent(vcomponent, parentContext) {
     const { type: Component, props, uid } = vcomponent
     const component = new Component(props)
+    const context = getContextByTypes(parentContext, Component.contextTypes)
+    const { $cache: cache, $updater: updater } = component
+
+    updater.isPending = true
+
+    component.props = component.props || props
+    component.context = context
+
     if (component.componentWillMount) {
         component.componentWillMount()
     }
-    const { $cache: cache, $updater: updater } = component
+
     const vnode = renderComponent(component)
-    const node = initVnode(vnode)
+    const node = initVnode(vnode, getChildContext(component, parentContext))
+
     node.cache = node.cache || {}
     node.cache[uid] = component
+
     cache.vnode = vnode
     cache.node = node
     cache.isMounted = true
+    cache.parentContext = parentContext
+
     pendingComponents.push(component)
     return node
 }
@@ -97,10 +110,10 @@ function clearPendingComponents() {
 export function clearPending() {
     clearPendingComponents()
 }
-export function initStateless(vcomponent) {
+export function initStateless(vcomponent, parentContext) {
     const { uid } = vcomponent
     const vnode = getStateless(vcomponent)
-    const node = initVnode(vnode)
+    const node = initVnode(vnode, parentContext)
     node.cache = node.cache || {}
     node.cache[uid] = vnode
     return node
