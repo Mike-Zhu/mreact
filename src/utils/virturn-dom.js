@@ -28,17 +28,17 @@ export function createVcomponent({ vtype, type, props, key, ref }) {
     return vcomponent
 }
 
-export function initVnode(vcomponent) {
+export function initVnode(vcomponent, parentContext) {
     let { vtype } = vcomponent,
         node = null
     if (!vtype) { // init text
-        node = initText(vcomponent)
+        node = initText(vcomponent, parentContext)
     } else if (vtype === VELEMENT) {
-        node = initElement(vcomponent)
+        node = initElement(vcomponent, parentContext)
     } else if (vtype === VCOMPONENT) {
-        node = initComponent(vcomponent)
+        node = initComponent(vcomponent, parentContext)
     } else if (vtype === VSTATELESS) {
-        node = initStateless(vcomponent)
+        node = initStateless(vcomponent, parentContext)
     }
     return node
 }
@@ -60,7 +60,7 @@ export function initElement(vcomponent) {
 }
 
 const pendingComponents = []
-export function initComponent(vcomponent) {
+export function initComponent(vcomponent, parentContext) {
     const { type: Component, props, uid } = vcomponent
     const component = new Component(props)
     if (component.componentWillMount) {
@@ -177,13 +177,13 @@ export function updateVcomponent(vcomponent, newVcomponent, node) {
     let nextState = newVcomponent.state
     let nextProps = newVcomponent.props
     let nextContext = newVcomponent.context
-    if(component.componengReceiveProps){
+    if (component.componengReceiveProps) {
         let isNotPending = !updater.isPending
-        if(isNotPending) updater.isPending = true
-        component.componengReceiveProps(nextProps,nextState)
-        if(isNotPending) updater.isPending = false
+        if (isNotPending) updater.isPending = true
+        component.componengReceiveProps(nextProps, nextState)
+        if (isNotPending) updater.isPending = false
     }
-    updater.emitUpdate(nextProps,nextContext)
+    updater.emitUpdate(nextProps, nextContext)
 }
 
 export function updateVstateless(vcomponent, newVcomponent, node) {

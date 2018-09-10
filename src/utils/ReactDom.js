@@ -2,7 +2,7 @@ import * as DOM from './DOM'
 import { initVnode, clearPending } from './virturn-dom'
 import { updateQueue } from './Component'
 
-export default function mount(element, node) {
+export default function mount(element, node, callback, parentContext) {
     if (!element.vtype) {
         throw new Error(`cannot render ${element} to container`)
     }
@@ -12,7 +12,7 @@ export default function mount(element, node) {
     //render本身作为一次大的batchPengding
     //所以在整个mount阶段
     //element => component
-    const renderedNode = initVnode(element)
+    const renderedNode = initVnode(element, parentContext)
     DOM.empty(node)
     DOM.appendChildren(node, renderedNode)
     updateQueue.isPending = true
@@ -20,4 +20,5 @@ export default function mount(element, node) {
     //这里应该是触发所有的component()
     updateQueue.isPending = false
     updateQueue.batchUpdate()
+    callback.call(element)
 }
