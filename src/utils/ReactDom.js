@@ -20,5 +20,7 @@ export default function mount(element, node, callback, parentContext) {
     //这里应该是触发所有的component()
     updateQueue.isPending = false
     updateQueue.batchUpdate()
-    callback.call(element)
+    if(callback){
+        callback.call(element)
+    }
 }

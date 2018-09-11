@@ -219,21 +219,21 @@ export function updateVstateless(vcomponent, newVcomponent, node, parentContext)
     return newVnode
 }
 
-export function updateElement(oldVnode, newVnode, node) {
+export function updateElement(oldVnode, newVnode, node, parentContext) {
     let diffProps = getDiffProps(oldVnode.props, newVnode.props)
     diffProps && setProps(node, diffProps)
-    updateChildren(oldVnode, newVnode, node)
+    updateChildren(oldVnode, newVnode, node, parentContext)
     return node
 }
 
-export function updateChildren(oldVnode, newVnode, node) {
+export function updateChildren(oldVnode, newVnode, node, parentContext) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
     let childNodes = node ? node.childNodes : []
 
     let j = 0
     for (let i = 0; i < children.length; i++) {
         if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除
-            compareTwoVnodes(children[i], newChildren[i], childNodes[i - j])
+            compareTwoVnodes(children[i], newChildren[i], childNodes[i - j], parentContext)
             if (newChildren[i] === null) {
                 //如果newChildren[i] 是null，说明不带key并且已经被删除了，nodes需要向前瞬移一位
                 j++
@@ -241,7 +241,7 @@ export function updateChildren(oldVnode, newVnode, node) {
 
         }
     }
-    patchChildren(node, diff)
+    patchChildren(node, diff, parentContext)
 }
 
 
@@ -267,7 +267,7 @@ export function setProps(node, props) {
     }
 }
 
-export function patchChildren(node, diff) {
+export function patchChildren(node, diff, parentContext) {
     let childNodes = node.childNodes
     diff.length > 0 && diff.forEach(function (singleDiff) {
         switch (singleDiff.type) {
@@ -277,7 +277,7 @@ export function patchChildren(node, diff) {
                 break
             //add
             case MOVES_ADD:
-                var newNode = isString(singleDiff.item) ? singleDiff.item : initVnode(singleDiff.item)
+                var newNode = isString(singleDiff.item) ? singleDiff.item : initVnode(singleDiff.item, parentContext)
                 if (childNodes.length > singleDiff.index) {
                     node.insertBefore(newNode, childNodes[singleDiff.index])
                 } else {
