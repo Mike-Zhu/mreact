@@ -86,7 +86,7 @@ export function initElement(vcomponent, parentContext) {
     const { type, props } = vcomponent
     let node = document.createElement(type)
     setProps(node, props)
-    let vchildren = node.vcomponent = getChildrenFromVcomponent(vcomponent)
+    let vchildren = node.vchildren = getChildrenFromVcomponent(vcomponent)
     vchildren.forEach(childVnode => {
         DOM.appendChildren(node, initVnode(childVnode, parentContext))
     })
@@ -97,7 +97,7 @@ export function initElement(vcomponent, parentContext) {
 export function updateElement(oldVnode, newVnode, node, parentContext) {
     let diffProps = getDiffProps(oldVnode.props, newVnode.props)
     diffProps && setProps(node, diffProps)
-    node.vcomponent = getChildrenFromVcomponent(newVnode)
+    node.vchildren = getChildrenFromVcomponent(newVnode)
     updateChildren(oldVnode, newVnode, node, parentContext)
     return node
 }
