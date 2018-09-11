@@ -78,3 +78,5 @@ export function collectChild(child, children) {
         children[children.length] = child
     }
 }
+
+export function noop(){}

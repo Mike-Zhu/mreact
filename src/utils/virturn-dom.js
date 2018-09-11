@@ -1,5 +1,5 @@
 import * as DOM from './DOM'
-import { getUid } from './utils'
+import { getUid, noop } from './utils'
 import { diffList, getDiffProps } from './list-diff'
 import {
     VTEXT,
@@ -44,6 +44,28 @@ export function initVnode(vcomponent, parentContext) {
     return node
 }
 
+export function updateVnode(oldVnode, newVnode, node, parentContext) {
+    const { vtype, type } = oldVnode
+    if (!type) {
+        if (oldVnode !== newVnode) {
+            node.data = newVnode
+        }
+        return node
+    }
+
+    if (vtype === VCOMPONENT) {
+        return updateVcomponent(oldVnode, newVnode, node, parentContext)
+    }
+    if (vtype === VSTATELESS) {
+        updateVstateless(oldVnode, newVnode, node, parentContext)
+    }
+
+    if (vtype === VELEMENT) {
+        updateElement(oldVnode, newVnode, node, parentContext)
+    }
+    return node
+}
+
 export function initText(text) {
     return document.createTextNode(text)
 }
@@ -57,6 +79,13 @@ export function initElement(vcomponent, parentContext) {
         DOM.appendChildren(node, initVnode(childVnode, parentContext))
     })
 
+    return node
+}
+
+export function updateElement(oldVnode, newVnode, node, parentContext) {
+    let diffProps = getDiffProps(oldVnode.props, newVnode.props)
+    diffProps && setProps(node, diffProps)
+    updateChildren(oldVnode, newVnode, node, parentContext)
     return node
 }
 
@@ -133,15 +162,6 @@ export function renderComponent(component) {
     return component.render()
 }
 
-export function destroyVnode(vcomponent, node) {
-    const { vtype } = vcomponent
-    if (vtype === VELEMENT) {
-
-    } else if (vtype === VCOMPONENT) {
-
-    }
-}
-
 export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
     let newNode = node
     if (!newVnode) {
@@ -160,27 +180,7 @@ export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
     return newNode
 }
 
-export function updateVnode(oldVnode, newVnode, node, parentContext) {
-    const { vtype, type } = oldVnode
-    if (!type) {
-        if (oldVnode !== newVnode) {
-            node.data = newVnode
-        }
-        return node
-    }
 
-    if (vtype === VCOMPONENT) {
-        return updateVcomponent(oldVnode, newVnode, node, parentContext)
-    }
-    if (vtype === VSTATELESS) {
-        updateVstateless(oldVnode, newVnode, node, parentContext)
-    }
-
-    if (vtype === VELEMENT) {
-        updateElement(oldVnode, newVnode, node, parentContext)
-    }
-    return node
-}
 
 export function updateVcomponent(vcomponent, newVcomponent, node, parentContext) {
     let uid = vcomponent.uid
@@ -219,12 +219,7 @@ export function updateVstateless(vcomponent, newVcomponent, node, parentContext)
     return newVnode
 }
 
-export function updateElement(oldVnode, newVnode, node, parentContext) {
-    let diffProps = getDiffProps(oldVnode.props, newVnode.props)
-    diffProps && setProps(node, diffProps)
-    updateChildren(oldVnode, newVnode, node, parentContext)
-    return node
-}
+
 
 export function updateChildren(oldVnode, newVnode, node, parentContext) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
@@ -244,6 +239,30 @@ export function updateChildren(oldVnode, newVnode, node, parentContext) {
     patchChildren(node, diff, parentContext)
 }
 
+export function destroyVnode(vcomponent, node) {
+    const { vtype } = vcomponent
+    if (vtype === VELEMENT) {
+
+    } else if (vtype === VCOMPONENT) {
+        destroyVcomponent(vcomponent, node)
+    }
+}
+
+export function destroyVcomponent(vcomponent, node) {
+    let uid = vcomponent.uid
+    let component = node.cache[uid]
+    let cache = component.$cache
+    delete node.cache[uid]
+    component.setState = component.forceUpdate = noop
+    if (component.componentWillUnmount) {
+        component.componentWillUnmount()
+    }
+    destroyVcomponent(cache.vnode, node)
+    cache.isMounted = false
+    cache.node = cache.parentContext = cache.vnode
+        = component.refs = component.context
+        = null
+}
 
 
 export function setProps(node, props) {
