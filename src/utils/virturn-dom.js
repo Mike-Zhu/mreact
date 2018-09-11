@@ -142,25 +142,25 @@ export function destroyVnode(vcomponent, node) {
     }
 }
 
-export function compareTwoVnodes(oldVnode, newVnode, node) {
+export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
     let newNode = node
     if (!newVnode) {
         //如果新节点是空，销毁node并且移移除
-        destroyVnode(oldVnode, node)
+        destroyVnode(oldVnode, node, parentContext)
         node.parentNode.removeChild(node)
     } else if (oldVnode.type !== newVnode.type || oldVnode.key !== newVnode.key) {
         //type或者key不同，完全重构
-        destroyVnode(oldVnode, node)
-        newNode = initVnode(newVnode)
+        destroyVnode(oldVnode, node, parentContext)
+        newNode = initVnode(newVnode, parentContext)
         node.parentNode.replaceChild(newNode, node)
     } else {
         //非上述情况则更新
-        newNode = updateVnode(oldVnode, newVnode, node)
+        newNode = updateVnode(oldVnode, newVnode, node, parentContext)
     }
     return newNode
 }
 
-export function updateVnode(oldVnode, newVnode, node) {
+export function updateVnode(oldVnode, newVnode, node, parentContext) {
     const { vtype, type } = oldVnode
     if (!type) {
         if (oldVnode !== newVnode) {
@@ -170,42 +170,47 @@ export function updateVnode(oldVnode, newVnode, node) {
     }
 
     if (vtype === VCOMPONENT) {
-        updateVcomponent(oldVnode, newVnode, node)
+        return updateVcomponent(oldVnode, newVnode, node, parentContext)
     }
     if (vtype === VSTATELESS) {
-        updateVstateless(oldVnode, newVnode, node)
+        updateVstateless(oldVnode, newVnode, node, parentContext)
     }
 
     if (vtype === VELEMENT) {
-        updateElement(oldVnode, newVnode, node)
+        updateElement(oldVnode, newVnode, node, parentContext)
     }
     return node
 }
 
-export function updateVcomponent(vcomponent, newVcomponent, node) {
+export function updateVcomponent(vcomponent, newVcomponent, node, parentContext) {
     let uid = vcomponent.uid
     let component = node.cache[uid]
     let { $updater: updater, $cache: cache } = component
+    let { type: Component, props: nextProps } = newVcomponent
+    delete node.cache[uid]
     node.cache[newVcomponent.uid] = component
+    cache.parentContext = parentContext
 
-    let nextState = newVcomponent.state
-    let nextProps = newVcomponent.props
-    let nextContext = newVcomponent.context
+    let nextContext = getContextByTypes(parentContext, Component.contextTypes)
+
     if (component.componengReceiveProps) {
+        //如果此时uodater的ispending为false，需要强制设为true，因为里面可能包含setstate
         let isNotPending = !updater.isPending
         if (isNotPending) updater.isPending = true
-        component.componengReceiveProps(nextProps, nextState)
+        component.componengReceiveProps(nextProps, nextContext)
         if (isNotPending) updater.isPending = false
     }
+
     updater.emitUpdate(nextProps, nextContext)
+    return cache.node
 }
 
-export function updateVstateless(vcomponent, newVcomponent, node) {
+export function updateVstateless(vcomponent, newVcomponent, node, parentContext) {
     let uid = vcomponent.uid
     let vnode = node.cache[uid]
     delete node.cache[uid]
-    let newVnode = getStateless(newVcomponent)
-    let newNode = compareTwoVnodes(vnode, newVnode, node)
+    let newVnode = getStateless(newVcomponent, parentContext)
+    let newNode = compareTwoVnodes(vnode, newVnode, node, parentContext)
     newNode.cache = newNode.cache || {}
     newNode.cache[uid] = newVnode
     if (newNode !== node) {

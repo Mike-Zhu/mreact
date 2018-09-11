@@ -170,6 +170,7 @@ class Component {
         let nextState = $cache.state || state
         let nextProps = $cache.props || props
         let nextContext = $cache.context || context
+        let parentContext = $cache.parentContext
         $cache.props = $cache.state = $cache.context = null
 
         updater.isPending = true
@@ -181,7 +182,7 @@ class Component {
         this.context = nextContext
 
         let newVnode = renderComponent(this)
-        let newNode = compareTwoVnodes(vnode, newVnode, node)
+        let newNode = compareTwoVnodes(vnode, newVnode, node, parentContext)
         if (newNode !== node) {
             newNode.cache = newNode.cache || {}
             syncCache(newNode.cache, node.cahce, newNode)
