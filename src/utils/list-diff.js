@@ -2,11 +2,12 @@ import {
     MOVES_ADD,
     MOVES_DELETE,
     MOVES_REORDER,
+    getChildrenFromVcomponent
 } from './utils'
 
 export function diffList(oldVnode, newVnode) {
-    let oldList = oldVnode.props.children,
-        newList = newVnode.props.children
+    let oldList = getChildrenFromVcomponent(oldVnode),
+        newList = getChildrenFromVcomponent(newVnode)
     oldList = Array.isArray(oldList) && oldList ? oldList : [oldList]
     newList = Array.isArray(newList) && newList ? newList : [newList]
 

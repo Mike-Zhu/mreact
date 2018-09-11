@@ -69,9 +69,11 @@ export function updateVnode(oldVnode, newVnode, node, parentContext) {
 export function destroyVnode(vcomponent, node) {
     const { vtype } = vcomponent
     if (vtype === VELEMENT) {
-
+        destroyVelement(vcomponent, node)
     } else if (vtype === VCOMPONENT) {
         destroyVcomponent(vcomponent, node)
+    } else if (vtype === VSTATELESS) {
+        destroyVstateless(vcomponent, node)
     }
 }
 
@@ -82,9 +84,9 @@ export function initText(text) {
 
 export function initElement(vcomponent, parentContext) {
     const { type, props } = vcomponent
-    let vchildren = getChildrenFromVcomponent(vcomponent)
     let node = document.createElement(type)
     setProps(node, props)
+    let vchildren = node.vcomponent = getChildrenFromVcomponent(vcomponent)
     vchildren.forEach(childVnode => {
         DOM.appendChildren(node, initVnode(childVnode, parentContext))
     })
@@ -95,8 +97,35 @@ export function initElement(vcomponent, parentContext) {
 export function updateElement(oldVnode, newVnode, node, parentContext) {
     let diffProps = getDiffProps(oldVnode.props, newVnode.props)
     diffProps && setProps(node, diffProps)
+    node.vcomponent = getChildrenFromVcomponent(newVnode)
     updateChildren(oldVnode, newVnode, node, parentContext)
     return node
+}
+
+export function updateChildren(oldVnode, newVnode, node, parentContext) {
+    let { diff, newChildren, children } = diffList(oldVnode, newVnode)
+    let childNodes = node ? node.childNodes : []
+
+    let j = 0
+    for (let i = 0; i < children.length; i++) {
+        if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除
+            compareTwoVnodes(children[i], newChildren[i], childNodes[i - j], parentContext)
+            if (newChildren[i] === null) {
+                //如果newChildren[i] 是null，说明不带key并且已经被删除了，nodes需要向前瞬移一位
+                j++
+            }
+
+        }
+    }
+    patchChildren(node, diff, parentContext)
+}
+
+export function destroyVelement(vcomponent, node) {
+    let { vchildren, childNodes } = node
+    for (let i = 0, len = vchildren.length; i < len; i++) {
+        destroyVnode(vchildren[i], childNodes[i])
+    }
+    node.vchildren = node.eventStore = null
 }
 
 const pendingComponents = []
@@ -193,6 +222,23 @@ export function updateVstateless(vcomponent, newVcomponent, node, parentContext)
     return newVnode
 }
 
+export function destroyVstateless(vcomponent, node) {
+    let uid = vcomponent.uid
+    let vnode = node.cache[uid]
+    delete node.cache[uid]
+    destroyVnode(vnode, node)
+}
+
+export function getStateless(vcomponent, parentContext) {
+    const { type: factory, props } = vcomponent
+    const context = getContextByTypes(parentContext, factory.contextTypes)
+    let vnode = factory(props, context)
+    if (vnode && vnode.render) {
+        vnode = vnode.render()
+    }
+    return vnode
+}
+
 export function renderComponent(component) {
     return component.render()
 }
@@ -215,33 +261,7 @@ export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
     return newNode
 }
 
-export function getStateless(vcomponent, parentContext) {
-    const { type: factory, props } = vcomponent
-    const context = getContextByTypes(parentContext, factory.contextTypes)
-    let vnode = factory(props, context)
-    if (vnode && vnode.render) {
-        vnode = vnode.render()
-    }
-    return vnode
-}
 
-export function updateChildren(oldVnode, newVnode, node, parentContext) {
-    let { diff, newChildren, children } = diffList(oldVnode, newVnode)
-    let childNodes = node ? node.childNodes : []
-
-    let j = 0
-    for (let i = 0; i < children.length; i++) {
-        if (newChildren !== 'listNull') {//listNull说明需要删掉，会在patch里删除
-            compareTwoVnodes(children[i], newChildren[i], childNodes[i - j], parentContext)
-            if (newChildren[i] === null) {
-                //如果newChildren[i] 是null，说明不带key并且已经被删除了，nodes需要向前瞬移一位
-                j++
-            }
-
-        }
-    }
-    patchChildren(node, diff, parentContext)
-}
 
 export function setProps(node, props) {
     let ignoreList = ['children', 'key']

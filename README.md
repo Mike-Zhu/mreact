@@ -15,10 +15,14 @@ now you can write your code in ```src``` and anywhere
 
 
 ### *Todo List*
+- ~~reactDom mount~~
+- ~~vnode mount~~
+- ~~virturn-dom~~
+- ~~vnode update~~
+- ~~destroy vNode~~
 - ~~life-cycle~~
-- ~~event-system~~
+- event-system(to be updated)
 - ~~state-batch~~
 - ~~add [propsChange, context]~~
 - add refs
-- destroy vNode
 - TEST
