@@ -66,6 +66,16 @@ export function updateVnode(oldVnode, newVnode, node, parentContext) {
     return node
 }
 
+export function destroyVnode(vcomponent, node) {
+    const { vtype } = vcomponent
+    if (vtype === VELEMENT) {
+
+    } else if (vtype === VCOMPONENT) {
+        destroyVcomponent(vcomponent, node)
+    }
+}
+
+
 export function initText(text) {
     return document.createTextNode(text)
 }
@@ -120,25 +130,46 @@ export function initVcomponent(vcomponent, parentContext) {
     return node
 }
 
-function clearPendingComponents() {
-    let len = pendingComponents.length
-    if (!len) {
-        return
+export function updateVcomponent(vcomponent, newVcomponent, node, parentContext) {
+    let uid = vcomponent.uid
+    let component = node.cache[uid]
+    let { $updater: updater, $cache: cache } = component
+    let { type: Component, props: nextProps } = newVcomponent
+    delete node.cache[uid]
+    node.cache[newVcomponent.uid] = component
+    cache.parentContext = parentContext
+
+    let nextContext = getContextByTypes(parentContext, Component.contextTypes)
+
+    if (component.componengReceiveProps) {
+        //如果此时uodater的ispending为false，需要强制设为true，因为里面可能包含setstate
+        let isNotPending = !updater.isPending
+        if (isNotPending) updater.isPending = true
+        component.componengReceiveProps(nextProps, nextContext)
+        if (isNotPending) updater.isPending = false
     }
-    let compoenent
-    while (compoenent = pendingComponents.shift()) {
-        let updater = compoenent.$updater
-        if (compoenent.componentDidMount) {
-            compoenent.componentDidMount()
-        }
-        updater.isPending = false
-        updater.emitUpdate()
-    }
+
+    updater.emitUpdate(nextProps, nextContext)
+    return cache.node
 }
 
-export function clearPending() {
-    clearPendingComponents()
+export function destroyVcomponent(vcomponent, node) {
+    let uid = vcomponent.uid
+    let component = node.cache[uid]
+    let cache = component.$cache
+    delete node.cache[uid]
+    component.setState = component.forceUpdate = noop
+    if (component.componentWillUnmount) {
+        component.componentWillUnmount()
+    }
+    destroyVcomponent(cache.vnode, node)
+    cache.isMounted = false
+    cache.node = cache.parentContext = cache.vnode
+        = component.refs = component.context
+        = null
 }
+
+
 export function initStateless(vcomponent, parentContext) {
     const { uid } = vcomponent
     const vnode = getStateless(vcomponent, parentContext)
@@ -148,14 +179,18 @@ export function initStateless(vcomponent, parentContext) {
     return node
 }
 
-export function getStateless(vcomponent, parentContext) {
-    const { type: factory, props } = vcomponent
-    const context = getContextByTypes(parentContext, factory.contextTypes)
-    let vnode = factory(props, context)
-    if (vnode && vnode.render) {
-        vnode = vnode.render()
+export function updateVstateless(vcomponent, newVcomponent, node, parentContext) {
+    let uid = vcomponent.uid
+    let vnode = node.cache[uid]
+    delete node.cache[uid]
+    let newVnode = getStateless(newVcomponent, parentContext)
+    let newNode = compareTwoVnodes(vnode, newVnode, node, parentContext)
+    newNode.cache = newNode.cache || {}
+    newNode.cache[uid] = newVnode
+    if (newNode !== node) {
+        syncCache(newNode.cache, node.cache, newNode)
     }
-    return vnode
+    return newVnode
 }
 
 export function renderComponent(component) {
@@ -180,46 +215,15 @@ export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
     return newNode
 }
 
-
-
-export function updateVcomponent(vcomponent, newVcomponent, node, parentContext) {
-    let uid = vcomponent.uid
-    let component = node.cache[uid]
-    let { $updater: updater, $cache: cache } = component
-    let { type: Component, props: nextProps } = newVcomponent
-    delete node.cache[uid]
-    node.cache[newVcomponent.uid] = component
-    cache.parentContext = parentContext
-
-    let nextContext = getContextByTypes(parentContext, Component.contextTypes)
-
-    if (component.componengReceiveProps) {
-        //如果此时uodater的ispending为false，需要强制设为true，因为里面可能包含setstate
-        let isNotPending = !updater.isPending
-        if (isNotPending) updater.isPending = true
-        component.componengReceiveProps(nextProps, nextContext)
-        if (isNotPending) updater.isPending = false
+export function getStateless(vcomponent, parentContext) {
+    const { type: factory, props } = vcomponent
+    const context = getContextByTypes(parentContext, factory.contextTypes)
+    let vnode = factory(props, context)
+    if (vnode && vnode.render) {
+        vnode = vnode.render()
     }
-
-    updater.emitUpdate(nextProps, nextContext)
-    return cache.node
+    return vnode
 }
-
-export function updateVstateless(vcomponent, newVcomponent, node, parentContext) {
-    let uid = vcomponent.uid
-    let vnode = node.cache[uid]
-    delete node.cache[uid]
-    let newVnode = getStateless(newVcomponent, parentContext)
-    let newNode = compareTwoVnodes(vnode, newVnode, node, parentContext)
-    newNode.cache = newNode.cache || {}
-    newNode.cache[uid] = newVnode
-    if (newNode !== node) {
-        syncCache(newNode.cache, node.cache, newNode)
-    }
-    return newVnode
-}
-
-
 
 export function updateChildren(oldVnode, newVnode, node, parentContext) {
     let { diff, newChildren, children } = diffList(oldVnode, newVnode)
@@ -238,32 +242,6 @@ export function updateChildren(oldVnode, newVnode, node, parentContext) {
     }
     patchChildren(node, diff, parentContext)
 }
-
-export function destroyVnode(vcomponent, node) {
-    const { vtype } = vcomponent
-    if (vtype === VELEMENT) {
-
-    } else if (vtype === VCOMPONENT) {
-        destroyVcomponent(vcomponent, node)
-    }
-}
-
-export function destroyVcomponent(vcomponent, node) {
-    let uid = vcomponent.uid
-    let component = node.cache[uid]
-    let cache = component.$cache
-    delete node.cache[uid]
-    component.setState = component.forceUpdate = noop
-    if (component.componentWillUnmount) {
-        component.componentWillUnmount()
-    }
-    destroyVcomponent(cache.vnode, node)
-    cache.isMounted = false
-    cache.node = cache.parentContext = cache.vnode
-        = component.refs = component.context
-        = null
-}
-
 
 export function setProps(node, props) {
     let ignoreList = ['children', 'key']
@@ -326,5 +304,25 @@ export function syncCache(cache, oldCache, node) {
             //如果value是Componnet，则需要更新node
             value.$cache.node = node
         }
+    }
+}
+
+export function clearPending() {
+    clearPendingComponents()
+}
+
+function clearPendingComponents() {
+    let len = pendingComponents.length
+    if (!len) {
+        return
+    }
+    let compoenent
+    while (compoenent = pendingComponents.shift()) {
+        let updater = compoenent.$updater
+        if (compoenent.componentDidMount) {
+            compoenent.componentDidMount()
+        }
+        updater.isPending = false
+        updater.emitUpdate()
     }
 }
