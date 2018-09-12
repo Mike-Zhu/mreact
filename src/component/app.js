@@ -9,6 +9,7 @@ export default class App extends Component {
             isTest: false,
             first: 1,
             inputValue: '',
+            two: 1,
             color: {
                 color: "red"
             },
@@ -64,7 +65,11 @@ export default class App extends Component {
                 value: "f++"
             }]
         })
-
+        setInterval(() => {
+            this.setState({
+                two: ++this.state.two
+            })
+        }, 1000)
     }
 
     alert = () => {
@@ -116,6 +121,7 @@ export default class App extends Component {
                     </div>
                 </span>
                 <h3>Heading 3</h3>
+                <SmallHeader ppp={this.state.two} />
             </div>
         )
     }

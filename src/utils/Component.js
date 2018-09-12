@@ -14,6 +14,7 @@ export let updateQueue = {
         if (this.updaters.indexOf(updater) < 0) {
             this.updaters.push(updater)
         }
+        this.batchUpdate()
     },
     batchUpdate: function () {
         if (this.isPending) {
@@ -180,7 +181,6 @@ class Component {
         this.state = nextState
         this.props = nextProps
         this.context = nextContext
-
         let newVnode = renderComponent(this)
         let newNode = compareTwoVnodes(vnode, newVnode, node, parentContext)
         if (newNode !== node) {
