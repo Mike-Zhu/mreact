@@ -22,6 +22,7 @@ now you can write your code in ```src``` and anywhere
 - ~~destroy vNode~~
 - ~~life-cycle~~
 - event-system(to be updated)
+- props-patch(to be updated)
 - ~~state-batch~~
 - ~~add [propsChange, context]~~
 - add refs
