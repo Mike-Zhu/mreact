@@ -14,7 +14,8 @@ export default function createElement(type, config, children) {
     } else if (typeof type === 'string') {
         vtype = VELEMENT
     } else if (typeof type === 'function') {
-        if (type.prototype.isReactComponent) {
+        //箭头函数没有prototype
+        if (type.prototype && type.prototype.isReactComponent) {
             vtype = VCOMPONENT
         } else {
             vtype = VSTATELESS
