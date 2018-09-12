@@ -1,6 +1,7 @@
 import Mreact from '../utils'
 const { Component } = Mreact
 import SmallHeader from './test'
+import './app.css'
 
 export default class App extends Component {
     constructor(props) {
@@ -121,7 +122,7 @@ export default class App extends Component {
                     </div>
                 </span>
                 <h3>Heading 3</h3>
-                <SmallHeader ppp={this.state.two} />
+                <SmallHeader ref={head => this.head = head} ppp={this.state.two} />
             </div>
         )
     }

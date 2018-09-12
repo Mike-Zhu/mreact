@@ -15,7 +15,7 @@ export default class SmallHeader extends Component {
     render() {
         // console.log(this.props)
         return (
-            <h5>{this.props.ppp} +++ 这是内部component</h5>
+            <h5>老狗，已经 {this.props.ppp} 秒没有更新代码了！</h5>
         )
     }
 }

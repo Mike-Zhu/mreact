@@ -1,5 +1,5 @@
 import * as DOM from './DOM'
-import { getUid, noop } from './utils'
+import { getUid, noop, isFunction } from './utils'
 import { diffList, getDiffProps } from './list-diff'
 import {
     VTEXT,
@@ -344,5 +344,23 @@ function clearPendingComponents() {
         }
         updater.isPending = false
         updater.emitUpdate()
+    }
+}
+
+function getDOMNode() {
+    return this
+}
+
+function attachRef(refs, refKey, refValue) {
+    if (refKey == null || !refValue) {
+        return
+    }
+    if (refValue.nodeName && !refValue.getDOMNode) {
+        refValue.getDOMNode = getDOMNode
+    }
+    if (isFunction(refKey)) {
+        refKey(refValue)
+    } else {
+        refs[refKey] = refValue
     }
 }
