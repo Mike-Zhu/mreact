@@ -240,7 +240,7 @@ export function getStateless(vcomponent, parentContext) {
 }
 
 export function renderComponent(component) {
-    return component.render()
+    return component.render(component.props, component.state)
 }
 
 export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
@@ -265,6 +265,9 @@ export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
 
 export function setProps(node, props) {
     let ignoreList = ['children', 'key']
+    let hasValueList = ['SELECT', 'INPUT', 'TEXTAREA']
+
+    let nodeName = node.nodeName
     for (let name in props) {
         if (ignoreList.find(res => res === name)) {
             continue
@@ -274,6 +277,10 @@ export function setProps(node, props) {
                 node.style[sKey] = styleObject[sKey]
             }
             continue
+        } else if (hasValueList.indexOf(nodeName) > 0
+            && name === 'value'
+        ) {
+            node.value = props[name]
         } else if (name.startsWith('on') >= 0) {
             addEvent(node, name, props[name])
             continue
