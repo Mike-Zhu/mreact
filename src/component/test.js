@@ -9,8 +9,8 @@ export default class SmallHeader extends Component {
     componentDidMount() {
 
     }
-    componengReceiveProps(p, s) {
-        // console.log(p, s)
+    componentWillReceiveProps(p, s) {
+        console.log(p, s)
     }
     render() {
         // console.log(this.props)

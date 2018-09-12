@@ -4,7 +4,7 @@ const SEARCH = '//api.github.com/search/repositories';
 
 export default class Foo extends Component {
 	async componentDidMount() {
-		let res = await fetch(`${SEARCH}?q=preact`),
+		let res = await fetch(`${SEARCH}?q=mreact`),
 			json = await res.json(),
 			results = json && json.items || [];
 		this.setState({ results });
@@ -32,11 +32,11 @@ const Result = ({ result }) => (
 		boxShadow: '0 1px 5px rgba(0,0,0,0.5)'
 	}}>
 		<div>
-			<a href={result.html_url} target="_blank">
+			<a aaa="da" href={result.html_url} target="_blank">
 				{result.full_name}
 			</a>
 			🌟<strong>{result.stargazers_count}</strong>
 		</div>
-		<p>{result.description}</p>
+		<p onclick ={e => console.log(result.description)}>{result.description}</p>
 	</div>
 );

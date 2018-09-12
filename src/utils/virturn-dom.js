@@ -170,11 +170,11 @@ export function updateVcomponent(vcomponent, newVcomponent, node, parentContext)
 
     let nextContext = getContextByTypes(parentContext, Component.contextTypes)
 
-    if (component.componengReceiveProps) {
+    if (component.componentWillReceiveProps) {
         //如果此时uodater的ispending为false，需要强制设为true，因为里面可能包含setstate
         let isNotPending = !updater.isPending
         if (isNotPending) updater.isPending = true
-        component.componengReceiveProps(nextProps, nextContext)
+        component.componentWillReceiveProps(nextProps, nextContext)
         if (isNotPending) updater.isPending = false
     }
 
@@ -277,11 +277,10 @@ export function setProps(node, props) {
                 node.style[sKey] = styleObject[sKey]
             }
             continue
-        } else if (hasValueList.indexOf(nodeName) > 0
-            && name === 'value'
-        ) {
+        } else if (hasValueList.indexOf(nodeName) > 0 && name === 'value') {
             node.value = props[name]
-        } else if (name.startsWith('on') >= 0) {
+            continue
+        } else if (name.startsWith('on')) {
             addEvent(node, name, props[name])
             continue
         } else if (typeof props[name] === "function") {
