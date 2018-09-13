@@ -240,7 +240,7 @@ export function getStateless(vcomponent, parentContext) {
 }
 
 export function renderComponent(component) {
-    return component.render(component.props || {}, component.state || {})
+    return component.render(component.props, component.state)
 }
 
 export function compareTwoVnodes(oldVnode, newVnode, node, parentContext) {
@@ -286,7 +286,11 @@ export function setProps(node, props) {
         } else if (typeof props[name] === "function") {
             continue
         }
-        node.setAttribute(name, props[name])
+        if (props[name]) {
+            node.setAttribute(name, props[name])
+        }else{
+            node.removeAttribute(name)
+        }
     }
 }
 

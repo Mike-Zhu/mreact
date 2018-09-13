@@ -145,6 +145,8 @@ class Component {
     // shouldComponentUpdate(nextProps, nextState) {
     // 	return true
     //}
+    state = {}
+    
     constructor(props) {
         this.$updater = new Updater(this)
         this.$cache = {
